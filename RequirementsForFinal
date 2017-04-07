@@ -1,0 +1,6 @@
+After summary, Prof's requirements for our final project can be expressed like following:
+- using more than 10 tables
+- taking normalization and denormalization into consideration
+	- normalization keeping every table 3NF and BCNF
+	- de-normalization why we choose to do this
+- trying fancy features like view, assertion, constrain, index....

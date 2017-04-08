@@ -1,0 +1,98 @@
+CREATE TABLE `Brand` (
+  `name` varchar(30),
+  `origin` varchar(30),
+  `creation_year` date,
+  `description` text
+);
+
+CREATE TABLE `History` (
+  `cid` integer,
+  `owner_initial` varchar(30),
+  `owner_type` enum(....),
+  `duration` float(*,1),
+  `time_begin` date,
+  `time_end` date,
+  `accident_count` integer
+);
+
+CREATE TABLE `Review` (
+  `cid` integer,
+  `did` integer,
+  `release_time` datetime,
+  `visible` enum (....),
+  `comment` text,
+  `star_count` integer
+);
+
+CREATE TABLE `User` (
+  `username` varchar(30),
+  `password` varchar(30),
+  `cid` integer,
+  `did` integer,
+  `name` varchar(30),
+  `phone` varchar(30),
+  `email` varchar(30),
+  `location` varchar(100),
+  `authority` integer
+);
+
+CREATE TABLE `Customer` (
+  `cid` integer,
+  `register_date` date,
+  `target_type` enum(...)
+);
+
+CREATE TABLE `Car` (
+  `cid` integer,
+  `mName` varchar(30),
+  `tName` varchar(30),
+  `place_of_production` varchar(30),
+  `imageURL` varchar(100),
+  `price` integer
+);
+
+CREATE TABLE `DBManager` (
+  `username` varchar(30),
+  `password` varchar(30),
+  `responsible_areas` set
+);
+
+CREATE TABLE `Type` (
+  `name` varchar(30),
+  `target_people` varchar(30),
+  `description` text,
+  `keyword` enum(.....)
+);
+
+CREATE TABLE `Dealer` (
+  `did` integer,
+  `register_date` date,
+  `star_count` integer
+);
+
+CREATE TABLE `Model` (
+  `name` varchar(30),
+  `brand_name` varchar(30),
+  `creation_year` date,
+  `price_min` integer,
+  `price_max` integer,
+  `description` text
+);
+
+CREATE TABLE `Record` (
+  `cid` integer,
+  `did` integer,
+  `c2id` integer,
+  `transaction _price` float(*,2),
+  `transaction_date` date,
+  `location` varchar(100)
+);
+
+CREATE TABLE `Report` (
+  `rid` integer,
+  `cid` integer,
+  `check_date` date,
+  `checker_review` text,
+  `statues` enum(.....)
+);
+

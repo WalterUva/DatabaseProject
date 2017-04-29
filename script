@@ -1,60 +1,59 @@
-CREATE TABLE `Brand` (
-  `name` varchar(30),
-  `origin` varchar(30),
-  `creation_year` date,
-  `description` text
-);
-
-CREATE TABLE `History` (
-  `cid` integer,
-  `owner_initial` varchar(30),
-  `owner_type` enum(....),
-  `duration` float(*,1),
-  `time_begin` date,
-  `time_end` date,
-  `accident_count` integer
-);
-
-CREATE TABLE `Review` (
-  `cid` integer,
-  `did` integer,
-  `release_time` datetime,
-  `visible` enum (....),
-  `comment` text,
-  `star_count` integer
-);
-
 CREATE TABLE `User` (
-  `username` varchar(30),
-  `password` varchar(30),
-  `cid` integer,
-  `did` integer,
+  `username` varchar(30),  //primary key
+  `password` varchar(30),  //bytes
   `name` varchar(30),
   `phone` varchar(30),
   `email` varchar(30),
-  `location` varchar(100),
-  `authority` integer
+  `zipcode` decimal(5),
+  `authority` enum("customer", "dealer", "dbManager")
 );
 
 CREATE TABLE `Customer` (
-  `cid` integer,
+  `username` varchar(30),  // foreign key
   `register_date` date,
-  `target_type` enum(...)
+  `balance` decimal(5, 2),
+  `follow_list`       //
 );
+
+CREATE TABLE `Dealer` (
+  `username` varchar(30),  // foreign key
+  `register_date` date,
+  `star_count` integer
+);
+
+CREATE_TABLE 'Inventory` {    //Think of name, Also following if user is customer
+  `username` varchar(30), //foreign key
+  `car_id` integer       // foreign key
+}
+
+CREATE_TABLE `Appointment` {
+  `appointment_id`, integer
+  `username` varchar(30),     //foreign key for customer
+  `username` varchar(30),     //foreign key for dealer
+  `car_id`  integer, 		  //foreign key
+  `appointment_time` datetime,  //primary key
+  `appointment_services`       //foreign key 
+}
+
+CREATE_TABLE `Appointment_Service` {
+  `appointment_id` integer,  //primary key
+  `serivceType` varchar(30)   //primary key
+  
+}
+
+CREATE_TABLE `Services` {
+  `serivceType` varchar(30),    //primary key
+  `price` varchar(30), 
+  
+}
 
 CREATE TABLE `Car` (
-  `cid` integer,
-  `mName` varchar(30),
-  `tName` varchar(30),
+  `car_id` integer,
+  `modelName` varchar(30),   //foreign key
+  `typeName` varchar(30),	  //forign key
   `place_of_production` varchar(30),
   `imageURL` varchar(100),
-  `price` integer
-);
-
-CREATE TABLE `DBManager` (
-  `username` varchar(30),
-  `password` varchar(30),
-  `responsible_areas` set
+  `price` decimal(5, 2)
 );
 
 CREATE TABLE `Type` (
@@ -64,35 +63,43 @@ CREATE TABLE `Type` (
   `keyword` enum(.....)
 );
 
-CREATE TABLE `Dealer` (
-  `did` integer,
-  `register_date` date,
-  `star_count` integer
-);
-
 CREATE TABLE `Model` (
   `name` varchar(30),
   `brand_name` varchar(30),
   `creation_year` date,
-  `price_min` integer,
-  `price_max` integer,
+  `price_min` decimal(*,2),
+  `price_max` decimal(*,2),
   `description` text
 );
 
-CREATE TABLE `Record` (
-  `cid` integer,
-  `did` integer,
-  `c2id` integer,
-  `transaction _price` float(*,2),
-  `transaction_date` date,
-  `location` varchar(100)
+CREATE TABLE `Transaction` (
+   `car_id` integer,
+   `username` varchar,     //customer
+   `username` varchar,     //dealer
+);
+
+CREATE TABLE `Review` (
+  `car_id` integer,              //foreign key for dealer
+  `dealer` integer,             //foreign key
+  `release_time` datetime,
+  `visible` enum (....),
+  `comment` text,
+  `star_count` integer
 );
 
 CREATE TABLE `Report` (
-  `rid` integer,
-  `cid` integer,
+  `report_id` integer,
+  `car_id` integer,    //foreign key
   `check_date` date,
   `checker_review` text,
   `statues` enum(.....)
+  
+  /*
+  `owner_initial` varchar(30),
+  `owner_type` enum(....),
+  `duration` float(*,1),
+  `time_begin` date,
+  `time_end` date,
+  `accident_count` integer
 );
 

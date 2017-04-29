@@ -1,0 +1,15 @@
+npm install express-session
+npm install express-mysql-session --save
+
+mysql -u //username -p 
+//password
+
+create user 'dbproject'@'localhost' identified by 'project';
+grant all privileges on *.* 'dbproject'@'localhost';
+create user 'dbproject'@'%' identified by 'project';
+grant all privileges on *.* 'dbproject'@'%';
+
+create database Project;
+user Project;
+
+//script file

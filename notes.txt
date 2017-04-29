@@ -1,0 +1,29 @@
+User
+primary_key  username
+password store a hash
+
+change utype enum
+add constraint  so that it Manager/Admin, dealer, customer
+remove cid, mid, did
+admin/manger is the only one that can add a dealer
+
+Customer, Dealer, DBManager are weak entity sets
+all of them username
+
+Customer
+register_date
+history/shoppingc cart
+balance
+
+Dealer
+register_date
+star_count
+inventory
+
+
+Car
+username of the dealer
+
+
+
+

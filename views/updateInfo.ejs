@@ -1,14 +1,14 @@
 <% include partials/header %>
 <div class="container">
     <div class='row'>
-        <h1 style="text-align:center">New User</h1>
+        <h1 style="text-align:center">Change user information</h1>
         <div style="width:30%; margin:25px auto">
 			<% if (typeof error != 'undefined')  { %>
 			<div class="alert alert-danger">
 				<%= error %>
 			</div>
 			<% } %>
-            <form action="/NewUser" method="POST">
+            <form action="/changeInfo" method="POST">
                 <div class="form-group">
                     <input class="form-control" placeholder="Username" type="text" name="username">
                 </div>

@@ -1,25 +1,34 @@
 CREATE TABLE `User` (
-  `username` varchar(30),  //primary key
-  `password` varchar(30),  //bytes
-  `name` varchar(30),
-  `phone` varchar(30),
+  `username` varchar(30),
+  `password` varbinary(256),
+  `firstname` varchar(30),
+  `lastname` varchar(30),
+  `phone` varchar(10),
   `email` varchar(30),
-  `zipcode` decimal(5),
-  `authority` enum("customer", "dealer", "dbManager")
+  `zipcode` char(5),
+  `register_date` date,
+  `authority` enum('customer', 'dealer', 'dbManager') DEFAULT 'customer',
+  PRIMARY KEY(username)
 );
 
 CREATE TABLE `Customer` (
-  `username` varchar(30),  // foreign key
-  `register_date` date,
-  `balance` decimal(5, 2),
-  `follow_list`       //
+  `username` varchar(30),
+  `balance` decimal(10, 2) DEFAULT 0.00,
+  
+  PRIMARY KEY(username),
+  FOREIGN KEY(username) REFERENCES User(username) ON DELETE CASCADE
 );
+//add follow list
+
 
 CREATE TABLE `Dealer` (
-  `username` varchar(30),  // foreign key
-  `register_date` date,
-  `star_count` integer
+  `username` varchar(30),
+  `star_count` integer DEFAULT 0,
+  
+  PRIMARY KEY(username),
+  FOREIGN KEY(username) REFERENCES User(username) ON DELETE CASCADE
 );
+
 
 CREATE_TABLE 'Inventory` {    //Think of name, Also following if user is customer
   `username` varchar(30), //foreign key
@@ -44,7 +53,6 @@ CREATE_TABLE `Appointment_Service` {
 CREATE_TABLE `Services` {
   `serivceType` varchar(30),    //primary key
   `price` varchar(30), 
-  
 }
 
 CREATE TABLE `Car` (

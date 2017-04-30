@@ -9,7 +9,10 @@ grant all privileges on *.* 'dbproject'@'localhost';
 create user 'dbproject'@'%' identified by 'project';
 grant all privileges on *.* 'dbproject'@'%';
 
+
+drop database Project;
 create database Project;
-user Project;
+use Project;
+
 
 //script file

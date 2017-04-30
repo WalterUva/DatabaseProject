@@ -2,6 +2,7 @@ var express 	= require("express"),
 	mysql   	= require("mysql"),
 	session = require('express-session'),
 	bodyParser 	= require("body-parser");
+	crypto = require('crypto');
 	
 var MySQLStore = require('express-mysql-session')(session);
 
@@ -104,7 +105,10 @@ app.post("/login", function(req, res){
 		if(err) 
 			throw err;
 		else {
-			if (password === results[0].password) {
+			const hash = crypto.createHash('sha256');
+			hash.update(username+password+username.length.toString());
+			var hashed_password = hash.digest('hex');
+			if (results[0] != null && hashed_password === results[0].password.toString('hex')) {
 				req.session.username = username;
 				res.redirect("/Welcome");
 			} else {
@@ -118,18 +122,45 @@ app.post("/NewUser", function(req, res){
 	var username = req.body.username;
 	var password = req.body.password;
 	var password2 = req.body.password2;
+	var fname = req.body.firstname;
+	var lname = req.body.lastname;
 	var phone = req.body.phone;
 	var email = req.body.email;
-	if (password != password2) {
+	var zipcode = req.body.zipcode;
+	
+	if (!res.headersSent && password != password2) {
 		res.render("signUp", {error: "Password does not match"});
+		res.end();
 	}
 	
-	connection.query('insert into User (username, password, phone, email) values ("' + username + '", "' + password + '", "' + phone + '", "' + email + '")',
-	function (err, results, fields) {
-	    if (err) throw err;
-		//password does not match
-	    else res.send('success');
-	});
+	if (!res.headersSent) {
+		const hash = crypto.createHash('sha256');
+		hash.update(username+password+username.length.toString());
+		var hashed_password = hash.digest('hex');
+	
+		connection.query('insert into User (username, password, firstname, lastname, phone, email, zipcode, register_date) values ("' 
+		+ username + '", UNHEX("' + hashed_password + '"), "' + fname + '", "' + lname + '", "' + phone + '", "' 
+		+ email + '", "' + zipcode + '", ' + "CURDATE()" + ');',
+		function (err, results, fields) {
+			if (err) {
+				res.render("signUp", {error: "Username is taken.", 
+				firstname: fname,
+				lastname: lname,
+				phone: phone,
+				email: email,
+				zipcode: zipcode
+				});
+				//console.log('this.sql', this.sql);
+			}
+			else {
+				connection.query('insert into Customer (username) values ("' + username + '")',
+				function (err, results, fields) {
+					if (err) throw err;
+					else return res.render("login");
+				});
+			}
+		});
+	}
 });
 
 //Listen on localhost:8000

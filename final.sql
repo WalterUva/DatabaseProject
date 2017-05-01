@@ -18,6 +18,7 @@
 --
 -- Table structure for table `Appointment`
 --
+use project;
 
 DROP TABLE IF EXISTS `Appointment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

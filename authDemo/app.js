@@ -2,7 +2,7 @@ var express = require("express"),
 	bodyParser = require("body-parser"),
 	passport = require("passport"),
 	passportConfig = require("./config/passport.js");
-	
+
 var mysql = require('mysql');
 
 var connection = mysql.createConnection({
@@ -11,6 +11,7 @@ var connection = mysql.createConnection({
       password : 'project',
       database : 'Project'
 });
+
 var app = express();
 //set up view engine
 app.set('view engine','ejs');

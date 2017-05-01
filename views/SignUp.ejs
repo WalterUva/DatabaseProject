@@ -1,23 +1,21 @@
 <% include partials/header %>
-<div class="container">
+
+	<!-- show any messages that come back with authentication -->
+	<% if (message.length > 0) { %>
+		<div class="alert alert-danger"><%= message %></div>
+	<% } %>
+
+	<!-- LOGIN FORM -->
+	<div class="container">
     <div class='row'>
-        <h1 style="text-align:center">New User</h1>
+        <h1 style="text-align:center">Sign Up</h1>
         <div style="width:30%; margin:25px auto">
-            <form action="/NewUser" method="POST">
+            <form action="/signup" method="post">
                 <div class="form-group">
-                    <input class="form-control" type= "text" placeholder="Username" name="Username">
+                    <input class="form-control" type= "text" placeholder="Username" name="username">
                 </div>
                 <div class="form-group">
-                    <input class="form-control" type= "Password" placeholder="Password" name="Password" >
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type= "Password" placeholder="Confirmed Password" name="Confirmed Password" >
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type= "tel" placeholder="Phone" name="Phone" >
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type= "Email" placeholder="Email" name="Email">
+                    <input class="form-control" type= "Password" placeholder="Password" name="password" >
                 </div>
                 <div class="form-group">
                     <button class="btn btn-lg btn-primary btn-block">Sign Up</button>
@@ -28,5 +26,10 @@
         </div>
         
     </div>
-</div>
+	</div>
+
+	<hr>
+
+	<p>Already have an account? <a href="/login">Login</a></p>
+	<p>Or go <a href="/">home</a>.</p>
 <% include partials/footer %>

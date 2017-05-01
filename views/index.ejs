@@ -4,6 +4,8 @@
         <div class="container">
             <h1>Welcome to EasyAuto</h1>
             <p>Find a car you love</p>
+            <a href="/search" class="btn btn-primary"> Search </a>
+            <a href="/Car/new" class="btn btn-success"> Post </a>
         </div>
     </header>
     <div class="row">
@@ -12,18 +14,20 @@
         </div>
     </div>
     <!--deal with different images size-->
-    <div class="row text-center" style="display:flex; flex-wrap:wrap;">
-        <div class="col-md-3 col-sm-6">
-                <div class="thumbnail">
-                    <img src="http://www.quattroworld.com/wp-content/uploads/2016/02/news-2016-audi-teardrop-rs7-still.jpg">
-                    <div class="caption">
-                         <h4>Audi</h4>
-                    </div>
-                    <p>
-                        <a href="/Car/123" class="btn btn-primary">More Info</a>
-                    </p>
+    <div class="row text-center" style="display:flex; flex-wrap: wrap;">
+        <% Cars.forEach(function(Car){ %>
+            <div class="col-md-3 col-sm-6">
+                <div class="thumbnail index">
+                   <img src="<%= Car.imageURL %>">
+                   <div class="caption">
+                       <h4><%= Car.brand_name %></h4>
+                   </div>
+                   <p>
+                       <a href="/Car/<%= Car.car_id %>" class="btn btn-primary">More Info</a>
+                   </p>
                 </div>
             </div>
+        <% }); %>
     </div>
 </div>
 <% include partials/footer %>

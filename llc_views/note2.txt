@@ -1,0 +1,23 @@
+User
+Customer
+Dealer
+
+Followed/favorited
+
+
+Car
+	list of reports
+
+Brand
+Model
+Type
+
+Reports
+	
+
+
+Review
+
+Transacation
+ customer_id
+ dealer_id

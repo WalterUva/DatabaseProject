@@ -1,0 +1,22 @@
+	connection.query('select * from User where username = "' + username + '";', 
+	function(err, results, fields) {
+		if (err) {
+			console.log(err);
+			console.log('this.sql', this.sql);
+		}
+		else if (results[0] != null) {
+			res.render("signUp", {error: "Username is taken.", 
+			firstname: fname,
+			lastname: lname,
+			phone: phone,
+			email: email,
+			zipcode: zipcode
+			});
+		}
+	});
+	
+	console.log(res.locals);
+	
+
+	
+	console.log(res.locals);

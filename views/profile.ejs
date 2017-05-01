@@ -1,0 +1,82 @@
+<% include partials/header %>
+
+<div class="content-wrapper py-3">
+    <div class="container-fluid">
+        <div class="card mb-3">
+            <div class="card-block">
+			    <div style="width:30%; margin:25px auto">
+			    <% if (typeof editMode == "undefined" || !editMode)  { %>
+				<div class="table-responsive">
+					<table class="table table-bordered" width="30%; margin:25px auto" id="dataTable" cellspacing="0">
+						<tr>
+							<th>Username:</th>
+							<td> <%= user.username %> </td>
+						<tr>
+						<tr>
+							<th>First Name:</th>
+							<td> <%= user.firstname %> </td>
+						<tr> 
+						<tr>
+							<th>Last Name:</th>
+							<td> <%= user.lastname %> </td>
+						<tr>
+						<tr>
+							<th>Phone:</th>
+							<td> <%= user.phone %></td>
+						<tr>
+						<tr>
+							<th>Zip code:</th>
+							<td> <%= user.zipcode %></td>
+						<tr>
+						<tr>
+							<th>Email:</th>
+							<td><%= user.email %></td>
+						<tr>	
+					</table>
+				</div>
+				<a href="/profile?edit=true">Edit Profile</a><br>
+				<% } else { %>
+					<% if (typeof errorEditing != "undefined")  { %>
+					<div class="alert alert-danger">
+						<%= errorEditing %>
+					</div>
+					<% } %>
+					<form action="/editProfile" method="POST">
+					<!-- <div class="form-group">
+							<input class="form-control" placeholder="Username" type="text" name="username" value=<%= user.username %>>
+						</div> -->
+						<div class="form-group">
+							<input class="form-control" placeholder="Current Password" type="password" name="currentpasswd" >
+						</div>
+						<div class="form-group">
+							<input class="form-control" placeholder="New password" type="password" name="newpasswd" >
+						</div>
+						<div class="form-group">
+							<input class="form-control" placeholder="Confirm New password" type="password" name="newpasswd2" >
+						</div>
+						<div class="form-group">
+							<input class="form-control" placeholder="First Name" type= "text" name="firstname" value=<%= user.firstname %>>
+						</div>
+						<div class="form-group">
+							<input class="form-control" placeholder="Last Name" type= "text" name="lastname" value=<%= user.lastname %>>
+						</div>
+						<div class="form-group">
+							<input class="form-control" type= "tel" placeholder="Phone" name="phone" value=<%= user.phone %>>
+						</div>
+						<div class="form-group">
+							<input class="form-control" type="zipcode" placeholder="Zipcode" name="zipcode" value=<%= user.zipcode%>>
+						</div>
+						<div class="form-group">
+							<input class="form-control" type= "email" placeholder="Email" name="email" value=<%= user.email %>>
+						</div>
+						<div class="form-group">
+							<input type ="submit" class="btn btn-lg btn-primary btn-block" value="Edit Profile">
+						</div>		
+					</form>
+				<% } %>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<% include partials/footer %>

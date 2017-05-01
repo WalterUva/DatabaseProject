@@ -7,7 +7,7 @@ CREATE TABLE `User` (
   `email` varchar(30),
   `zipcode` char(5),
   `register_date` date,
-  `authority` enum('customer', 'dealer', 'dbManager') DEFAULT 'customer',
+  `authority` enum('Customer', 'Dealer', 'DBManager') DEFAULT 'Customer',
   PRIMARY KEY(username)
 );
 

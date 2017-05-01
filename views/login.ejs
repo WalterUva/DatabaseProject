@@ -3,17 +3,17 @@
     <div class='row'>
         <h1 style="text-align:center">Sign In</h1>
         <div style="width:30%; margin:25px auto">
-			<% if (typeof error != 'undefined')  { %>
+			<% if (typeof errorLogin != "undefined")  { %>
 			<div class="alert alert-danger">
-				<%= error %>
+				<%= errorLogin %>
 			</div>
 			<% } %>
             <form action="/login" method="POST">
                 <div class="form-group">
-                    <input class="form-control" placeholder="Username" type= "text" name="username">
+                    <input class="form-control" placeholder="Username" type="text" name="username">
                 </div>
                 <div class="form-group">
-                    <input class="form-control" placeholder="Password" type= "password" name="password">
+                    <input class="form-control" placeholder="Password" type="password" name="passwd">
                 </div>
                 <div class="form-group">
                     <input type ="submit" class="btn btn-lg btn-primary btn-block" value="Login">

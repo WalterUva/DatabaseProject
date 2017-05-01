@@ -1,23 +1,14 @@
 <% include partials/header %>
 <div class="container">
     <div class='row'>
-        <h1 style="text-align:center">Change user information</h1>
+        <h1 style="text-align:center">Please fill out your information</h1>
         <div style="width:30%; margin:25px auto">
-			<% if (typeof error != "undefined")  { %>
+			<% if (typeof errorSignUp2 != "undefined")  { %>
 			<div class="alert alert-danger">
-				<%= error %>
+				<%= errorSignUp2 %>
 			</div>
 			<% } %>
-            <form action="/changeInfo" method="POST">
-                <div class="form-group">
-                    <input class="form-control" placeholder="Username" type="text" name="username">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" placeholder="Password" type= "password" name="password" >
-                </div>
-                <div class="form-group">
-                    <input class="form-control" placeholder="Confirm password" type= "password" name="password2" >
-                </div>
+            <form action="/newUser2" method="POST">
 				<div class="form-group">
                     <input class="form-control" placeholder="First Name" type= "text" name="firstname">
                 </div>
@@ -37,8 +28,6 @@
                     <input type ="submit" class="btn btn-lg btn-primary btn-block" value="Sign up">
                 </div>
             </form>
-			<a href="/login"> Login instead </a><br>
-            <a href="/">Go back</a>
         </div>
         
     </div>

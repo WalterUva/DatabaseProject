@@ -1,3 +1,4 @@
+Drop table If exists `User`;
 CREATE TABLE `User` (
   `username` varchar(30),
   `password` varbinary(256),
@@ -6,11 +7,12 @@ CREATE TABLE `User` (
   `phone` varchar(10),
   `email` varchar(30),
   `zipcode` char(5),
-  `register_date` date,
+  `register_date` date NOT NULL,
   `authority` enum('Customer', 'Dealer', 'DBManager') DEFAULT 'Customer',
   PRIMARY KEY(username)
 );
 
+Drop table If exists `Customer`;
 CREATE TABLE `Customer` (
   `username` varchar(30),
   `balance` decimal(10, 2) DEFAULT 0.00,
@@ -20,7 +22,7 @@ CREATE TABLE `Customer` (
 );
 //add follow list
 
-
+Drop table If exists `Dealer`;
 CREATE TABLE `Dealer` (
   `username` varchar(30),
   `star_count` integer DEFAULT 0,
@@ -29,11 +31,63 @@ CREATE TABLE `Dealer` (
   FOREIGN KEY(username) REFERENCES User(username) ON DELETE CASCADE
 );
 
+CREATE TABLE `Type` (
+  `name` varchar(30),
+  `description` text,
+  
+   PRIMARY KEY(name)
+);
 
-CREATE_TABLE 'Inventory` {    //Think of name, Also following if user is customer
-  `username` varchar(30), //foreign key
-  `car_id` integer       // foreign key
-}
+Drop table If exists `Model`;
+CREATE TABLE `Model` (
+  `name` varchar(30),
+  `brand_name` varchar(30),
+  `creation_year` date,
+  `price_min` decimal(5,2),
+  `price_max` decimal(5,2),
+  `description` text,
+  
+  PRIMARY KEY(name)
+);
+
+Drop table If exists `Car`;
+CREATE TABLE `Car` (
+  `car_id` integer,
+  `model_name` varchar(30),
+  `type_name` varchar(30),
+  `place_of_production` varchar(30),
+  `year_of_production` year,
+  `mileage` int,
+  `imageURL` varchar(100),
+  `price` decimal(5, 2),
+  
+  PRIMARY KEY(car_id),
+  FOREIGN KEY(model_name) REFERENCES Model(name),
+  FOREIGN KEY(type_name) REFERENCES Type(name)
+);
+
+CREATE TABLE `Inventory` (
+  `username` varchar(30),
+  `car_id` integer,
+  `location` varchar(30),
+  
+  PRIMARY KEY(username, car_id),
+  FOREIGN KEY(username) REFERENCES User(username) ON DELETE CASCADE,
+  FOREIGN KEY(car_id) REFERENCES Car(car_id)
+);
+
+CREATE TABLE `Following` (
+  `username` varchar(30),
+  `car_id` integer,
+  
+  PRIMARY KEY(username, car_id),
+  FOREIGN KEY(username) REFERENCES User(username) ON DELETE CASCADE,
+  FOREIGN KEY(car_id) REFERENCES Car(car_id)
+);
+
+
+
+
 
 CREATE_TABLE `Appointment` {
   `appointment_id`, integer
@@ -54,31 +108,6 @@ CREATE_TABLE `Services` {
   `serivceType` varchar(30),    //primary key
   `price` varchar(30), 
 }
-
-CREATE TABLE `Car` (
-  `car_id` integer,
-  `modelName` varchar(30),   //foreign key
-  `typeName` varchar(30),	  //forign key
-  `place_of_production` varchar(30),
-  `imageURL` varchar(100),
-  `price` decimal(5, 2)
-);
-
-CREATE TABLE `Type` (
-  `name` varchar(30),
-  `target_people` varchar(30),
-  `description` text,
-  `keyword` enum(.....)
-);
-
-CREATE TABLE `Model` (
-  `name` varchar(30),
-  `brand_name` varchar(30),
-  `creation_year` date,
-  `price_min` decimal(*,2),
-  `price_max` decimal(*,2),
-  `description` text
-);
 
 CREATE TABLE `Transaction` (
    `car_id` integer,

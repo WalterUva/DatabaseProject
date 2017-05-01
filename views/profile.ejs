@@ -13,13 +13,9 @@
 							<td> <%= user.username %> </td>
 						<tr>
 						<tr>
-							<th>First Name:</th>
-							<td> <%= user.firstname %> </td>
+							<th>Name:</th>
+							<td> <%= user.name %> </td>
 						<tr> 
-						<tr>
-							<th>Last Name:</th>
-							<td> <%= user.lastname %> </td>
-						<tr>
 						<tr>
 							<th>Phone:</th>
 							<td> <%= user.phone %></td>
@@ -46,7 +42,7 @@
 							<input class="form-control" placeholder="Username" type="text" name="username" value=<%= user.username %>>
 						</div> -->
 						<div class="form-group">
-							<input class="form-control" placeholder="Current Password" type="password" name="currentpasswd" >
+							<input class="form-control" placeholder="Please enter your current Password" type="password" name="currentpasswd" >
 						</div>
 						<div class="form-group">
 							<input class="form-control" placeholder="New password" type="password" name="newpasswd" >
@@ -55,10 +51,7 @@
 							<input class="form-control" placeholder="Confirm New password" type="password" name="newpasswd2" >
 						</div>
 						<div class="form-group">
-							<input class="form-control" placeholder="First Name" type= "text" name="firstname" value=<%= user.firstname %>>
-						</div>
-						<div class="form-group">
-							<input class="form-control" placeholder="Last Name" type= "text" name="lastname" value=<%= user.lastname %>>
+							<input class="form-control" placeholder="Name" type="text" name="name" value=<%=user.name%>>
 						</div>
 						<div class="form-group">
 							<input class="form-control" type= "tel" placeholder="Phone" name="phone" value=<%= user.phone %>>

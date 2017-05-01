@@ -118,10 +118,9 @@ DROP TABLE IF EXISTS `Customer`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Customer` (
   `username` varchar(30) NOT NULL,
-  `register_date` date DEFAULT NULL,
   `balance` decimal(5,2) DEFAULT '0.00',
   PRIMARY KEY (`username`),
-  CONSTRAINT `customer_ibfk_1` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `customer_ibfk_1` FOREIGN KEY (`username`) REFERENCES `User` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -143,10 +142,9 @@ DROP TABLE IF EXISTS `Dealer`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Dealer` (
   `username` varchar(30) NOT NULL,
-  `register_date` date DEFAULT NULL,
   `star_count` int(11) DEFAULT '3',
   PRIMARY KEY (`username`),
-  CONSTRAINT `dealer_ibfk_1` FOREIGN KEY (`username`) REFERENCES `user` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `dealer_ibfk_1` FOREIGN KEY (`username`) REFERENCES `User` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -389,12 +387,13 @@ DROP TABLE IF EXISTS `User`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `User` (
   `username` varchar(30) NOT NULL,
-  `password` varchar(30) DEFAULT NULL,
+  `password` varbinary(256) DEFAULT NULL,
   `name` varchar(30) DEFAULT NULL,
   `phone` varchar(30) DEFAULT NULL,
   `email` varchar(30) DEFAULT NULL,
   `zipcode` decimal(5,0) DEFAULT NULL,
-  `authority` enum('Customer','Dealer','DBManager') DEFAULT NULL,
+  `register_date` date NOT NULL,
+  `authority` enum('Customer','Dealer','DBManager') DEFAULT 'Customer',
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;

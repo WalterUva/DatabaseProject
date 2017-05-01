@@ -1,0 +1,85 @@
+<% include partials/header %>
+<div class="container">
+    <div class='row'>
+        <h1 style="text-align:center">Post Your Car</h1>
+        <div style="width:30%; margin:25px auto">
+            <form action="/Car" method="POST">
+
+            	<div class="form-group">
+         
+                  	<select class="selectpicker form-control" data-live-search="true" name="Brand">
+                  	  <option selected="selected">Brand</option>
+					  <option value="volvo">Volvo</option>
+					  <option value="Audi">Audi</option>
+					  <option value="BMW">BMW</option>
+					  <option value="Opel">Opel</option>
+					  <option value="Porsche">Porsche</option>
+					  <option value="Honda">Honda</option>
+					</select>
+             	</div>
+                <div class="form-group">
+                    <div class="form-group">
+            	
+                  	<select class="selectpicker form-control" name="Model">
+                  	  <option selected="selected">Model</option>
+					  <option value="volvo">Volvo</option>
+					  <option value="Audi">Audi</option>
+					  <option value="BMW">BMW</option>
+					  <option value="Opel">Opel</option>
+					  <option value="Porsche">Porsche</option>
+					  <option value="Honda">Honda</option>
+					</select>
+             	</div>
+             	<div class="form-group">
+                    <div class="form-group">
+            		
+                  	<select class="selectpicker form-control" name="Year">
+                  	  <option selected="selected">Year</option>
+					  <option>2017</option>
+					</select>
+             	</div>
+
+             	<div class="form-group">
+                    <div class="form-group">
+            		
+                  	<select class="selectpicker form-control" name="Type">
+                  	  <option selected="selected">Type</option>
+					  <option>Sedan</option>
+					</select>
+             	</div>
+
+             	<div class="form-group">
+                    <div class="form-group">
+            		
+                  	<select class="selectpicker form-control" name="Title">
+                  	  <option selected="selected">Title</option>
+					  <option>Clean</option>
+					  <option>Salvage</option>
+					  <option>Rebuilt</option>
+					</select>
+             	</div>
+
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type= "text" placeholder="Price" name="Price" >
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type= "text" placeholder="Mileage" name="Mileage" >
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type= "text" placeholder="ImageURL" name="Image">
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" rows="4" placeholder="Description" name="Description"></textarea>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block">Submit</button>
+                </div>
+                
+            </form>
+            <a href="/">Go back</a>
+        </div>
+        
+    </div>
+</div>
+<% include partials/footer %>

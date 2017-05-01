@@ -5,10 +5,9 @@
         <div class="container-fluid">
             <div class="card mb-3">
                 <div class="card-header">
-                    <i class="fa fa-table">Dealer list</i>
+                    <i class="fa fa-table">Customer List</i>
                 </div>
                 <div class="card-block">
-					<% if (typeof addMode == "undefined" || !addMode)  { %>
                     <div class="table-responsive">
                         <table class="table table-bordered" width="100%" id="dataTable" cellspacing="0">
                             <thead>
@@ -19,7 +18,7 @@
                                     <th>Email</th>
                                     <th>Zipcode</th>
 									<th>Register date</th>
-									<th>Ratings</th>
+									<th>Balance</th>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -30,49 +29,25 @@
                                     <th>Email</th>
                                     <th>Zipcode</th>
 									<th>Register date</th>
-									<th>Ratings</th>
+									<th>Balance</th>
                                 </tr>
                             </tfoot>
                             <tbody>
-								<% for (i = 0; i < dealers.length; i++)   { %>
+								<% for (i = 0; i < customers.length; i++)   { %>
                                 <tr>
-                                    <td><%= dealers[i].username%></td>
-                                    <th><%= dealers[i].name%></th>
-                                    <th><%= dealers[i].phone%></th>
-                                    <th><%= dealers[i].email%></th>
-                                    <th><%= dealers[i].zipcode%></th>
-									<th><%= dealers[i].register_date.getMonth()+1%>/<%= dealers[i].register_date.getDay()%>/<%=dealers[i].register_date.getFullYear()%></th>
-									<th><%= dealers[i].ratings%></th>
+                                    <td><%= customers[i].username%></td>
+                                    <th><%= customers[i].name%></th>
+                                    <th><%= customers[i].phone%></th>
+                                    <th><%= customers[i].email%></th>
+                                    <th><%= customers[i].zipcode%></th>
+									<th><%= customers[i].register_date%></th>
+									<th><%= customers[i].balance%></th>
                                 </tr>
 								<%  }  %>
                             </tbody>
                         </table>
                     </div>
-					<a href="/dealers?add=true">Add dealer</a><br>
-					<% } else { %>
-					<form action="/newDealer" method="POST">
-						<div class="form-group">
-							<input class="form-control" placeholder="Username" type="text" name="username">
-						</div>
-						<div class="form-group">
-							<input class="form-control" placeholder="Password" type="password" name="passwd" >
-						</div>
-						<div class="form-group">
-							<input class="form-control" placeholder="Name" type="text" name="name">
-						</div>
-						<div class="form-group">
-							<input class="form-control" type= "tel" placeholder="Phone" name="phone">
-						</div>
-						<div class="form-group">
-							<input class="form-control" type="zipcode" placeholder="Zipcode" name="zipcode">
-						</div>
-						<div class="form-group">
-							<input class="form-control" type= "email" placeholder="Email" name="email">
-						</div>
-						<div class="form-group">
-							<input type ="submit" class="btn btn-lg btn-primary btn-block" value="Add Dealer">
-						</div>		
-					<%  }  %>		
+					<a href="/dealers?add=true">Add customer</a><br>
                 </div>
                 <div class="card-footer small text-muted">
                     Updated yesterday at 11:59 PM

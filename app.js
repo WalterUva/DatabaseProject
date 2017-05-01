@@ -88,17 +88,40 @@ app.get("/admin", function(req, res) {
 	}
 });
 
+app.get("/customers", function(req, res) {
+	if (typeof req.session.username == 'undefined') {
+		res.render("login");
+	}
+	else if (req.session.authority === 'DBManager') {
+		var add = req.query.add;
+		var username = req.session.username;
+		var selectQuery = 'select * from User natural join Customer;'
+		connection.query(selectQuery, function(err, results, fields) {
+			if(err) console.log(this.sql);
+			console.log(results[0]);
+			res.render("admin_customers", {customers: results, addMode: add});
+		});
+	}	
+	else {
+		res.redirect("/Welcome");
+	}
+});
+
 app.get("/dealers", function(req, res) {
 	if (typeof req.session.username == 'undefined') {
 		res.render("login");
 	}
 	else if (req.session.authority === 'DBManager') {
-		res.render("admin_dealers");
+		var add = req.query.add;
+		var selectQuery = 'select * from User natural join Dealer;'
+		connection.query(selectQuery, function(err, results, fields) {
+			if(err) console.log(this.sql);
+			res.render("admin_dealers", {dealers: results, addMode: add});
+		});
 	}	
 	else {
 		res.redirect("/Welcome");
 	}
-	
 });
 
 app.get("/profile", function(req, res) {
@@ -112,6 +135,7 @@ app.get("/profile", function(req, res) {
 		connection.query(selectQuery, function(err, results, fields) {
 			if(err) console.log(this.sql);
 			else if (results[0] != null) {
+				console.log(results[0]);
 				res.render("profile", {user: results[0], editMode: edit});
 			}
 		});
@@ -125,13 +149,19 @@ app.get("/logout", function(req, res){
 });
 
 
-app.get("/Car/new", function(req, res){
-	res.render("newCar")
+
+app.get("/car/new", function(req, res){
+	res.render("newCar");
 });
 
-app.get("/Car/:id", function(req, res){
+app.get("/car/:id", function(req, res){
 	res.render("show");
 });
+
+app.get("/cars", function(req, res){
+	res.render("cars");
+});
+
 app.post("/Car", function(req,res){
 	newCar = {
 		Brand : req.body.Brand,
@@ -171,7 +201,7 @@ app.post("/newUser", function(req, res) {
 				const hash = crypto.createHash('sha256');
 				hash.update(username+passwd+username.length.toString());
 				var hashed_password = hash.digest('hex');
-				var insertQuery = 'insert into User (username, password) values ("' + username + '", UNHEX("' + hashed_password + '"));'
+				var insertQuery = 'insert into User (username, password, register_date) values ("' + username + '", UNHEX("' + hashed_password + '")' + ', CURDATE());';
 				connection.query(insertQuery, function(err, results, fields) {
 					if (err) {
 						console.log(this.sql);
@@ -194,14 +224,13 @@ app.post("/newUser", function(req, res) {
 
 app.post("/newUser2", function(req, res){
 	var username = req.session.tempName;
-	var fname = req.body.firstname;
-	var lname = req.body.lastname;
+	var name = req.body.name;
 	var phone = req.body.phone;
 	var email = req.body.email;
 	var zipcode = req.body.zipcode;
 	
-	var updateQuery = 'update User set firstname="' + fname + '", lastname="' + lname 
-		+ '", phone="' + phone + '", email="' + email + '", zipcode="' + zipcode + '", register_date=' + "CURDATE() "
+	var updateQuery = 'update User set name="' + name
+		+ '", phone="' + phone + '", email="' + email + '", zipcode=' + zipcode + ', register_date=' + 'CURDATE() '
 		+ 'where username="' + username + '";'
 	
 	connection.query(updateQuery, function (err, results, fields) {
@@ -209,6 +238,77 @@ app.post("/newUser2", function(req, res){
 		else {
 			req.session.tempName = null;
 			res.redirect("login");
+		}
+	});
+});
+
+app.post("/newDealer", function(req, res) {
+	var username = req.body.username;
+	var passwd = req.body.passwd;
+	var name = req.body.name;
+	var phone = req.body.phone;
+	var email = req.body.email;
+	var zipcode = req.body.zipcode;
+	
+	var selectQuery = 'select * from User where username="' + username + '";';
+	connection.query(selectQuery, function addUser(err, results, fields) {
+		if(err) console.log(this.sql);
+		else if (results[0] != null) {
+			res.render("admin_dealers", {addMode: true, errorAddDealer: "Username is taken."});
+		}	
+		else {
+			const hash = crypto.createHash('sha256');
+			hash.update(username+passwd+username.length.toString());
+			var hashed_password = hash.digest('hex');
+			var insertQuery = 'insert into User (username, password, name, phone, email, zipcode, register_date, authority) values ("' 
+				+ username + '", UNHEX("' + hashed_password + '"), "' + name + '", "' +  phone + '", "' +  email + '", ' +  zipcode + ', CURDATE(), "Dealer");'
+			connection.query(insertQuery, function(err, results, fields) {
+				if (err) console.log(this.sql);
+				else {
+					var insertQuery2 = 'insert into Dealer (username) values ("' + username + '");'
+					connection.query(insertQuery2, function (err, results, fields) {
+						if (err) throw err;
+						else {
+							res.redirect("dealers");
+						}
+					});
+				}
+			});
+		}
+	});
+});
+
+
+//For debugging purposes only
+app.post("/newAdmin", function(req, res) {
+	var username = req.body.username;
+	var passwd = req.body.passwd;
+	var passwd2 = req.body.passwd2;	
+	
+	var selectQuery = 'select * from User where username="' + username + '";';
+	connection.query(selectQuery, function addUser(err, results, fields) {
+		if(err) console.log(this.sql);
+		else if (results[0] != null) {
+			res.render("createAdmin", {error: "Username is taken."});
+		}	
+		else {
+			if (passwd != passwd2) {
+				res.render("createAdmin", {error: "Passwords do not match"});
+			}
+			else {
+				const hash = crypto.createHash('sha256');
+				hash.update(username+passwd+username.length.toString());
+				var hashed_password = hash.digest('hex');
+				var insertQuery = 'insert into User (username, password, register_date, authority) values ("' + username + '", UNHEX("' + hashed_password + '"), CURDATE(), "DBManager");';
+				connection.query(insertQuery, function(err, results, fields) {
+					if (err) {
+						console.log(this.sql);
+					}
+					else {
+						res.redirect("login");
+					}
+				});
+			}
 		}
 	});
 });
@@ -243,54 +343,13 @@ app.post("/login", function(req, res){
 	});
 });
 
-//For debugging purposes only
-app.post("/newAdmin", function(req, res) {
-	var username = req.body.username;
-	var passwd = req.body.passwd;
-	var passwd2 = req.body.passwd2;	
-	
-	var selectQuery = 'select * from User where username="' + username + '";';
-	connection.query(selectQuery, function addUser(err, results, fields) {
-		if(err) console.log(this.sql);
-		else if (results[0] != null) {
-			res.render("createAdmin", {error: "Username is taken."});
-		}	
-		else {
-			if (passwd != passwd2) {
-				res.render("createAdmin", {error: "Passwords do not match"});
-			}
-			else {
-				const hash = crypto.createHash('sha256');
-				hash.update(username+passwd+username.length.toString());
-				var hashed_password = hash.digest('hex');
-				var insertQuery = 'insert into User (username, password, authority) values ("' + username + '", UNHEX("' + hashed_password + '"), "DBManager");';
-				connection.query(insertQuery, function(err, results, fields) {
-					if (err) {
-						console.log(this.sql);
-					}
-					else {
-						var insertQuery2 = 'insert into Customer (username) values ("' + username + '");'
-						connection.query(insertQuery2, function (err, results, fields) {
-							if (err) throw err;
-							else {
-								res.redirect("login");
-							}
-						});
-					}
-				});
-			}
-		}
-	});
-});
-
 app.post("/editProfile", function(req, res) {
 	var username = req.session.username;
 	//var newusername = req.body.username;
 	var curpasswd = req.body.currentpasswd;
 	var newpasswd = req.body.newpasswd;
 	var newpasswd2 = req.body.newpasswd2;
-	var fname = req.body.firstname;
-	var lname = req.body.lastname;
+	var name = req.body.name;
 	var phone = req.body.phone;
 	var email = req.body.email;
 	var zipcode = req.body.zipcode;
@@ -304,8 +363,8 @@ app.post("/editProfile", function(req, res) {
 		var user = results[0];
 		if (results[0] != null && hashed_password === results[0].password.toString('hex')) {
 			if(newpasswd.length == 0 && newpasswd2.length == 0) {
-				var updateQuery = 'update User set firstname="' + fname + '", lastname="' + lname 
-					+ '", phone="' + phone + '", email="' + email + '", zipcode="' + zipcode + '" '
+				var updateQuery = 'update User set name="' + name
+					+ '", phone="' + phone + '", email="' + email + '", zipcode=' + zipcode + ' '
 					+ 'where username="' + username + '";'
 				connection.query(updateQuery, function(err, results, fields) {
 					if (err) {
@@ -324,8 +383,8 @@ app.post("/editProfile", function(req, res) {
 				hash2.update(username+newpasswd+username.length.toString());
 				var hashed_password2 = hash2.digest('hex');
 				
-				var updateQuery = 'update User set password=UNHEX("' + hashed_password2 + '"), firstname="' + fname + '", lastname="' + lname 
-					+ '", phone="' + phone + '", email="' + email + '", zipcode="' + zipcode + '" '
+				var updateQuery = 'update User set password=UNHEX("' + hashed_password2 + '"), name="' + name  
+					+ '", phone="' + phone + '", email="' + email + '", zipcode=' + zipcode + ' '
 					+ 'where username="' + username + '";'
 				connection.query(updateQuery, function(err, results, fields) {
 					if (err) {

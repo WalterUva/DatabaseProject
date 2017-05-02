@@ -6,6 +6,7 @@ var express = require("express"),
 	cookieParser = require('cookie-parser'),
 	bodyParser = require('body-parser'),
 	morgan = require('morgan'),
+	methodOverride = require("method-override"),
 	app      = express(),
 	port     = process.env.PORT || 8080;
 
@@ -24,7 +25,7 @@ app.use(bodyParser.urlencoded({
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(methodOverride("_method"));
 app.set('view engine', 'ejs'); // set up ejs for templating
 
 // required for passport

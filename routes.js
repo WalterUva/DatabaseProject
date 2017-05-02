@@ -103,17 +103,28 @@ module.exports = function(app, passport, connection) {
 		});
     });
 	app.get("/Car/:id/update", function (req, res) {
-		res.send("Update");
-		// connection.query(" * from Car WHERE car_id="+ req.params.id, function (err, rows, fields){
-		// 	if(!err){
-		// 		res.render("show",{Car:rows[0]});
-		// 	} else {
-		// 		console.log('Error while performing Query');
-		// 	}
-		// });
+		connection.query("SELECT * from Car WHERE car_id="+ req.params.id, function (err, rows, fields){
+			if(!err){
+				res.render("edit",{Car:rows[0]});
+			} else {
+				console.log('Error while performing Query');
+			}
+		});
     });
+
+	app.put("/Car/:id", function(req, res){
+		var query = "update Car set price =" +req.body.Price+ ", mileage = " + req.body.Mileage + " where car_id ="+ req.params.id;
+		console.log(query);
+		connection.query(query, function (err, rows, fields){
+			if(!err){
+				res.redirect("/Car/"+req.params.id);
+			} else {
+				console.log('Error while performing Query');
+			}
+		});
+	});
+
 	app.get("/Car/:id/delete", function (req, res) {
-		// res.send("delete");
 		connection.query("DELETE from Car WHERE car_id="+ req.params.id, function (err, rows, fields){
 			if(!err){
 				res.redirect("/");

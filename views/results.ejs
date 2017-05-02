@@ -1,0 +1,26 @@
+<% include partials/header %>
+ <div class="container">
+    <% Cars.forEach(function(Car){ %>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                <li class="list-group-item">Year <%=Car.year_of_production%></li>
+                <li class="list-group-item">Mileage <%=Car.mileage%></li>
+                <li class="list-group-item"><%=Car.type_name%></li>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="thumbnail">
+                <img class="img-responsive" src="<%= Car.imageURL %>">
+                <div class="caption-full">
+                    <h4 class="pull-right">$<%=Car.price %></h4>
+                    <h4><a><%=Car.brand_name%></a></h4>
+                    <p><%=Car.model_name%></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% }); %>
+</div>
+    
+<% include partials/footer %>

@@ -1,0 +1,32 @@
+<% include partials/header %>
+<div class="container">
+    <div class='row'>
+        <h1 style="text-align:center">New User</h1>
+        <div style="width:30%; margin:25px auto">
+            <form action="/NewUser" method="POST">
+                <div class="form-group">
+                    <input class="form-control" type= "text" placeholder="Username" name="Username">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type= "Password" placeholder="Password" name="Password" >
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type= "Password" placeholder="Confirmed Password" name="Confirmed Password" >
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type= "tel" placeholder="Phone" name="Phone" >
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type= "Email" placeholder="Email" name="Email">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block">Sign Up</button>
+                </div>
+                
+            </form>
+            <a href="/">Go back</a>
+        </div>
+        
+    </div>
+</div>
+<% include partials/footer %>

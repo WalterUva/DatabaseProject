@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 var express 	= require("express"),
 	mysql   	= require("mysql"),
 	session = require('express-session'),
@@ -43,20 +44,21 @@ connection.connect(function(err) {
 //css
 app.use(express.static(path.join(__dirname, 'public')));
 
-//set up bodyParser and view engine
-app.use(bodyParser.urlencoded({extended: true}));
-app.set("view engine", "ejs");
-
 //Root Routes
-app.get("/", function(req, res){
-	res.redirect("/Welcome");
+// =====================================
+// HOME PAGE (with login links) ========
+// =====================================
+app.get('/', function(req, res) {
+	connection.query("SELECT * from Car", function (err, results, fields) {
+		if(!err){
+			res.render("index",{Cars:results});
+		} 
+		else {
+			console.log(this.sql);
+		}
+	});
 });
-//index Route
-app.get("/Welcome", function(req, res){
-	console.log(req.session.username);
-	console.log(req.session.authority);
-	res.render("index", {username: req.session.username, welcome: true});
-});
+
 
 app.get("/sign-up", function(req, res) {
 	res.render("signUp");
@@ -148,36 +150,82 @@ app.get("/logout", function(req, res){
 	res.redirect("/Welcome");
 });
 
-
-
-app.get("/car/new", function(req, res){
-	res.render("newCar");
+//Add a new Car to database
+app.get("/Car/new", function (req, res) {
+	res.render("newCar")
 });
-
-app.get("/car/:id", function(req, res){
-	res.render("show");
-});
-
-app.get("/cars", function(req, res){
-	res.render("cars");
-});
-
-app.post("/Car", function(req,res){
-	newCar = {
-		Brand : req.body.Brand,
-		Model : req.body.Model,
-		Year  : req.body.Year,
-		Type  : req.body.Type,
-		Title : req.body.Title,
-		Price : req.body.Price,
-		Mileage : req.body.Mileage,
-		Image : req.body.Image,
-		Description : req.body.Description
-	};
-	connection.query("show databases", function(err, results, fields){
-		if(err) throw err;
+	    //Process the add Car Form
+app.post("/Car", function (req, res) {
+	var car_id = Math.floor(Math.random() * 1000000);
+    newCar = {
+        Brand: req.body.Brand,
+        Model: req.body.Model,
+        Year: req.body.Year,
+        Type: req.body.Type,
+        Price: req.body.Price,
+        Mileage: req.body.Mileage,
+        Image: req.body.Image,
+   };
+	var query = "insert into Car(car_id, model_name, type_name, brand_name, year_of_production, mileage, imageURL, price)values("+car_id+",'"+newCar.Model+"','" + newCar.Type+"','" + newCar.Brand + "'," + newCar.Year + "," + newCar.Mileage + ",'" + newCar.Image + "'"+ newCar.Price +")";
+    connection.query(query, function (err, results, fields) {   
+		if(!err){
+			res.redirect("/");
+		} 
 		else {
-			res.send(newCar);
+			console.log(this.sql);
+		}
+    });
+});
+	
+//show the detail of a Car
+app.get("/Car/:id", function (req, res) {
+	connection.query("SELECT * from Car WHERE car_id="+ req.params.id, function (err, rows, fields){
+		if(!err) {
+			res.render("show",{Car:rows[0]});
+		} 
+		else {
+			console.log('Error while performing Query');
+		}
+	});
+});
+	
+app.get("/Car/:id/update", function (req, res) {
+	res.send("Update");
+		// connection.query(" * from Car WHERE car_id="+ req.params.id, function (err, rows, fields){
+		// 	if(!err){
+		// 		res.render("show",{Car:rows[0]});
+		// 	} else {
+		// 		console.log('Error while performing Query');
+		// 	}
+		// });
+});
+
+app.get("/Car/:id/delete", function (req, res) {
+	// res.send("delete");
+	connection.query("DELETE from Car WHERE car_id="+ req.params.id, function (err, rows, fields){
+		if(!err){
+			res.redirect("/");
+		} else {
+			console.log('Error while performing Query');
+		}
+	});
+});
+	
+//Search a car
+app.get("/search", function (req, res){
+	res.render("search");
+});
+	
+app.post("/search", function (req, res){
+	var brand = req.body.Brand;
+	var model = req.body.Model;
+	var query = "SELECT * from Car WHERE brand_name= '"+brand+"' and model_name= '"+model+"'";
+	connection.query(query, function (err, rows, fields){
+		if(!err){
+			res.render("results",{Cars:rows});
+		}
+		else {
+			console.log(this.sql);
 		}
 	});
 });
@@ -277,7 +325,6 @@ app.post("/newDealer", function(req, res) {
 		}
 	});
 });
-
 
 //For debugging purposes only
 app.post("/newAdmin", function(req, res) {
@@ -403,6 +450,5 @@ app.post("/editProfile", function(req, res) {
 });
 
 //Listen on localhost:8000
-app.listen(8000, 'localhost', function(){
-   console.log("The Service is running");
-});
+app.listen(port);
+console.log('The magic happens on port ' + port);

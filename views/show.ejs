@@ -1,6 +1,27 @@
 <% include partials/header %>
-    <h1>Audi</h1>
-    <p>This is a brand new Audi</p>
-    <img src="http://www.quattroworld.com/wp-content/uploads/2016/02/news-2016-audi-teardrop-rs7-still.jpg">
+ <div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <p class="lead">EasyAuto</p>
+            <div class="list-group">
+                <li class="list-group-item">Year <%=Car.year_of_production%></li>
+                <li class="list-group-item">Mileage <%=Car.mileage%></li>
+                <li class="list-group-item"><%=Car.type_name%></li>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="thumbnail">
+                <img class="img-responsive" src="<%= Car.imageURL %>">
+                <div class="caption-full">
+                    <h4 class="pull-right">$<%=Car.price%></h4>
+                    <h4><a><%=Car.brand_name%></a></h4>
+                    <p><%=Car.model_name%></p>
+                </div>
+            </div>
+            <a href="/Car/<%=Car.car_id%>/update" class="btn btn-warning"> Update </a>
+            <a href="/Car/<%=Car.car_id%>/delete" class="btn btn-danger"> Delete </a>
+        </div>
+    </div>
+</div>
     
 <% include partials/footer %>

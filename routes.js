@@ -94,7 +94,7 @@ module.exports = function(app, passport, connection) {
     });
     //show the detail of a Car
     app.get("/Car/:id", function (req, res) {
-		connection.query("SELECT * from Car WHERE car_id="+ req.params.id, function (err, rows, fields){
+		connection.query("SELECT * from Car natural join Inventory natural join Dealer natural join user WHERE car_id="+ req.params.id, function (err, rows, fields){
 			if(!err){
 				res.render("show",{Car:rows[0]});
 			} else {
@@ -144,14 +144,25 @@ module.exports = function(app, passport, connection) {
 		console.log(query);
 		connection.query(query, function (err, rows, fields){
 			if(!err){
-				console.log(rows);
 				res.render("results",{Cars:rows});
 			} else {
 				console.log('Error while performing Query');
 			}
 		});
 	});
-
+	//Dealer
+	app.get("/User/:id", function(req, res){
+		var query = "SELECT * from Dealer natural join User natural join review WHERE username='"+req.params.id +"'";
+		console.log(query);
+		connection.query(query, function(err, rows, fields){
+			if(!err){
+				console.log(rows[0]);
+				res.render("user",{user:rows[0]});
+			} else {
+				console.log('Error while performing Query');
+			}
+		})
+	});
 	// =====================================
 	// LOGOUT ==============================
 	// =====================================

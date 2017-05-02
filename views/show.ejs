@@ -2,7 +2,7 @@
  <div class="container">
     <div class="row">
         <div class="col-md-3">
-            <p class="lead">EasyAuto</p>
+            <p class="lead"><a href="/User/<%=Car.username%>"><%=Car.name%></a></p>
             <div class="list-group">
                 <li class="list-group-item">Year <%=Car.year_of_production%></li>
                 <li class="list-group-item">Mileage <%=Car.mileage%></li>
@@ -14,12 +14,12 @@
                 <img class="img-responsive" src="<%= Car.imageURL %>">
                 <div class="caption-full">
                     <h4 class="pull-right">$<%=Car.price%></h4>
-                    <h4><a><%=Car.brand_name%></a></h4>
+                    <h4><%=Car.brand_name%></h4>
                     <p><%=Car.model_name%></p>
                 </div>
+                <a href="/Car/<%=Car.car_id%>/update" class="btn btn-warning"> Update </a>
+                <a href="/Car/<%=Car.car_id%>/delete" class="btn btn-danger"> Delete </a>
             </div>
-            <a href="/Car/<%=Car.car_id%>/update" class="btn btn-warning"> Update </a>
-            <a href="/Car/<%=Car.car_id%>/delete" class="btn btn-danger"> Delete </a>
         </div>
     </div>
 </div>

@@ -3,8 +3,7 @@
     <div class='row'>
         <h1 style="text-align:center">Post Your Car</h1>
         <div style="width:30%; margin:25px auto">
-            <form action="/Car" method="POST">
-
+            <form action="/addCar" method="POST">
             	<div class="form-group">
                   	<select id="newbrands" class="selectpicker form-control" data-live-search="true" name="Brand">
            	  		  <option selected="selected">Brand</option>
@@ -14,7 +13,6 @@
 					  <option value="Toyota">Toyota</option>
 					</select>
              	</div>
-
     			<div id="newmodels" class="form-group">
                   	<select class="selectpicker form-control" name="Model">
 						  <option selected="selected">Model</option>
@@ -55,11 +53,11 @@
                 </div>
 
                 <div class="form-group">
-                    <input class="form-control" type= "text" placeholder="Mileage" name="Mileage" >
+                    <input class="form-control" type="text" placeholder="Mileage" name="Mileage" >
                 </div>
 
                 <div class="form-group">
-                    <input class="form-control" type= "text" placeholder="ImageURL" name="Image">
+                    <input class="form-control" type="text" placeholder="ImageURL" name="Image">
                 </div>
 
                 <div class="form-group">

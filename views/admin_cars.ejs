@@ -5,43 +5,43 @@
         <div class="container-fluid">
             <div class="card mb-3">
                 <div class="card-header">
-                    <i class="fa fa-table">Customer List</i>
+                    <i class="fa fa-table">Car List</i>
                 </div>
                 <div class="card-block">
                     <div class="table-responsive">
                         <table class="table table-bordered" width="100%" id="dataTable" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>Username</th>
-                                    <th>Name</th>
-                                    <th>Phone</th>
-                                    <th>Email</th>
-                                    <th>Zipcode</th>
-									<th>Register date</th>
-									<th>Balance</th>
+                                    <th>CarID</th>
+                                    <th>Model</th>
+                                    <th>Type</th>
+                                    <th>Brand</th>
+                                    <th>Mileage</th>
+									<th>Year</th>
+									<th>Price</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <th>Username</th>
-                                    <th>Name</th>
-                                    <th>Phone</th>
-                                    <th>Email</th>
-                                    <th>Zipcode</th>
-									<th>Register date</th>
-									<th>Balance</th>
+                                    <th>CarID</th>
+                                    <th>Model</th>
+                                    <th>Type</th>
+                                    <th>Brand</th>
+                                    <th>Mileage</th>
+									<th>Year</th>
+									<th>Price</th>
                                 </tr>
                             </tfoot>
                             <tbody>
-								<% for (i = 0; i < customers.length; i++)   { %>
+								<% for (i = 0; i < cars.length; i++)   { %>
                                 <tr>
-                                    <td><%= customers[i].username%></td>
-                                    <th><%= customers[i].name%></th>
-                                    <th><%= customers[i].phone%></th>
-                                    <th><%= customers[i].email%></th>
-                                    <th><%= customers[i].zipcode%></th>
-									<th><%= customers[i].register_date%></th>
-									<th><%= customers[i].balance%></th>
+                                    <td><%= cars[i].car_id%></td>
+                                    <th><%= cars[i].model_name%></th>
+                                    <th><%= cars[i].type_name%></th>
+                                    <th><%= cars[i].brand_name%></th>
+                                    <th><%= cars[i].mileage%></th>
+									<th><%= cars[i].year %></th>
+									<th><%= cars[i].price%></th>
                                 </tr>
 								<%  }  %>
                             </tbody>

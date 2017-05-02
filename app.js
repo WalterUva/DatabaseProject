@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 var express 	= require("express"),
 	mysql   	= require("mysql"),
 	session = require('express-session'),
@@ -43,10 +42,11 @@ connection.connect(function(err) {
 
 //css
 app.use(express.static(path.join(__dirname, 'public')));
+app.set("view engine", "ejs");
 
 //Root Routes
 // =====================================
-// HOME PAGE (with login links) ========
+// HOME PAGE
 // =====================================
 app.get('/', function(req, res) {
 	connection.query("SELECT * from Car", function (err, results, fields) {
@@ -59,175 +59,11 @@ app.get('/', function(req, res) {
 	});
 });
 
-
+// =====================================
+// Sign up pages
+// =====================================
 app.get("/sign-up", function(req, res) {
 	res.render("signUp");
-});
-
-app.get("/login", function(req, res){
-	if (typeof req.session.username == 'undefined') {
-		res.render("login");
-	}
-	else {
-		res.redirect("/Welcome");
-	}
-});
-
-//For debugging purposes only
-app.get("/create-admin", function(req, res) {
-	res.render("createAdmin");
-});
-
-app.get("/admin", function(req, res) {
-	if (typeof req.session.username == 'undefined') {
-		res.render("login");
-	}
-	else if (req.session.authority === 'DBManager') {
-		res.render("admin");
-	}
-	else {
-		res.redirect("/Welcome");
-	}
-});
-
-app.get("/customers", function(req, res) {
-	if (typeof req.session.username == 'undefined') {
-		res.render("login");
-	}
-	else if (req.session.authority === 'DBManager') {
-		var add = req.query.add;
-		var username = req.session.username;
-		var selectQuery = 'select * from User natural join Customer;'
-		connection.query(selectQuery, function(err, results, fields) {
-			if(err) console.log(this.sql);
-			console.log(results[0]);
-			res.render("admin_customers", {customers: results, addMode: add});
-		});
-	}	
-	else {
-		res.redirect("/Welcome");
-	}
-});
-
-app.get("/dealers", function(req, res) {
-	if (typeof req.session.username == 'undefined') {
-		res.render("login");
-	}
-	else if (req.session.authority === 'DBManager') {
-		var add = req.query.add;
-		var selectQuery = 'select * from User natural join Dealer;'
-		connection.query(selectQuery, function(err, results, fields) {
-			if(err) console.log(this.sql);
-			res.render("admin_dealers", {dealers: results, addMode: add});
-		});
-	}	
-	else {
-		res.redirect("/Welcome");
-	}
-});
-
-app.get("/profile", function(req, res) {
-	if (typeof req.session.username == 'undefined') {
-		res.render("login");
-	}
-	else {
-		var edit = req.query.edit;
-		var username = req.session.username;
-		var selectQuery = 'select * from User where username = "' + username + '";' 
-		connection.query(selectQuery, function(err, results, fields) {
-			if(err) console.log(this.sql);
-			else if (results[0] != null) {
-				console.log(results[0]);
-				res.render("profile", {user: results[0], editMode: edit});
-			}
-		});
-	}
-});
-
-app.get("/logout", function(req, res){
-	delete req.session.username;
-	delete req.session.authority;
-	res.redirect("/Welcome");
-});
-
-//Add a new Car to database
-app.get("/Car/new", function (req, res) {
-	res.render("newCar")
-});
-	    //Process the add Car Form
-app.post("/Car", function (req, res) {
-	var car_id = Math.floor(Math.random() * 1000000);
-    newCar = {
-        Brand: req.body.Brand,
-        Model: req.body.Model,
-        Year: req.body.Year,
-        Type: req.body.Type,
-        Price: req.body.Price,
-        Mileage: req.body.Mileage,
-        Image: req.body.Image,
-   };
-	var query = "insert into Car(car_id, model_name, type_name, brand_name, year_of_production, mileage, imageURL, price)values("+car_id+",'"+newCar.Model+"','" + newCar.Type+"','" + newCar.Brand + "'," + newCar.Year + "," + newCar.Mileage + ",'" + newCar.Image + "'"+ newCar.Price +")";
-    connection.query(query, function (err, results, fields) {   
-		if(!err){
-			res.redirect("/");
-		} 
-		else {
-			console.log(this.sql);
-		}
-    });
-});
-	
-//show the detail of a Car
-app.get("/Car/:id", function (req, res) {
-	connection.query("SELECT * from Car WHERE car_id="+ req.params.id, function (err, rows, fields){
-		if(!err) {
-			res.render("show",{Car:rows[0]});
-		} 
-		else {
-			console.log('Error while performing Query');
-		}
-	});
-});
-	
-app.get("/Car/:id/update", function (req, res) {
-	res.send("Update");
-		// connection.query(" * from Car WHERE car_id="+ req.params.id, function (err, rows, fields){
-		// 	if(!err){
-		// 		res.render("show",{Car:rows[0]});
-		// 	} else {
-		// 		console.log('Error while performing Query');
-		// 	}
-		// });
-});
-
-app.get("/Car/:id/delete", function (req, res) {
-	// res.send("delete");
-	connection.query("DELETE from Car WHERE car_id="+ req.params.id, function (err, rows, fields){
-		if(!err){
-			res.redirect("/");
-		} else {
-			console.log('Error while performing Query');
-		}
-	});
-});
-	
-//Search a car
-app.get("/search", function (req, res){
-	res.render("search");
-});
-	
-app.post("/search", function (req, res){
-	var brand = req.body.Brand;
-	var model = req.body.Model;
-	var query = "SELECT * from Car WHERE brand_name= '"+brand+"' and model_name= '"+model+"'";
-	connection.query(query, function (err, rows, fields){
-		if(!err){
-			res.render("results",{Cars:rows});
-		}
-		else {
-			console.log(this.sql);
-		}
-	});
 });
 
 app.post("/newUser", function(req, res) {
@@ -290,74 +126,16 @@ app.post("/newUser2", function(req, res){
 	});
 });
 
-app.post("/newDealer", function(req, res) {
-	var username = req.body.username;
-	var passwd = req.body.passwd;
-	var name = req.body.name;
-	var phone = req.body.phone;
-	var email = req.body.email;
-	var zipcode = req.body.zipcode;
-	
-	var selectQuery = 'select * from User where username="' + username + '";';
-	connection.query(selectQuery, function addUser(err, results, fields) {
-		if(err) console.log(this.sql);
-		else if (results[0] != null) {
-			res.render("admin_dealers", {addMode: true, errorAddDealer: "Username is taken."});
-		}	
-		else {
-			const hash = crypto.createHash('sha256');
-			hash.update(username+passwd+username.length.toString());
-			var hashed_password = hash.digest('hex');
-			var insertQuery = 'insert into User (username, password, name, phone, email, zipcode, register_date, authority) values ("' 
-				+ username + '", UNHEX("' + hashed_password + '"), "' + name + '", "' +  phone + '", "' +  email + '", ' +  zipcode + ', CURDATE(), "Dealer");'
-			connection.query(insertQuery, function(err, results, fields) {
-				if (err) console.log(this.sql);
-				else {
-					var insertQuery2 = 'insert into Dealer (username) values ("' + username + '");'
-					connection.query(insertQuery2, function (err, results, fields) {
-						if (err) throw err;
-						else {
-							res.redirect("dealers");
-						}
-					});
-				}
-			});
-		}
-	});
-});
-
-//For debugging purposes only
-app.post("/newAdmin", function(req, res) {
-	var username = req.body.username;
-	var passwd = req.body.passwd;
-	var passwd2 = req.body.passwd2;	
-	
-	var selectQuery = 'select * from User where username="' + username + '";';
-	connection.query(selectQuery, function addUser(err, results, fields) {
-		if(err) console.log(this.sql);
-		else if (results[0] != null) {
-			res.render("createAdmin", {error: "Username is taken."});
-		}	
-		else {
-			if (passwd != passwd2) {
-				res.render("createAdmin", {error: "Passwords do not match"});
-			}
-			else {
-				const hash = crypto.createHash('sha256');
-				hash.update(username+passwd+username.length.toString());
-				var hashed_password = hash.digest('hex');
-				var insertQuery = 'insert into User (username, password, register_date, authority) values ("' + username + '", UNHEX("' + hashed_password + '"), CURDATE(), "DBManager");';
-				connection.query(insertQuery, function(err, results, fields) {
-					if (err) {
-						console.log(this.sql);
-					}
-					else {
-						res.redirect("login");
-					}
-				});
-			}
-		}
-	});
+// =====================================
+// Log in pages
+// =====================================
+app.get("/login", function(req, res){
+	if (typeof req.session.username == 'undefined') {
+		res.render("login");
+	}
+	else {
+		res.redirect("/Welcome");
+	}
 });
 
 app.post("/login", function(req, res){
@@ -390,6 +168,25 @@ app.post("/login", function(req, res){
 	});
 });
 
+// =====================================
+// Profile pages
+// =====================================
+app.get("/profile", function(req, res) {
+	if (typeof req.session.username == 'undefined') {
+		res.render("login");
+	}
+	else {
+		var edit = req.query.edit;
+		var username = req.session.username;
+		var selectQuery = 'select * from User where username = "' + username + '";' 
+		connection.query(selectQuery, function(err, results, fields) {
+			if(err) console.log(this.sql);
+			else if (results[0] != null) {
+				res.render("profile", {user: results[0], editMode: edit});
+			}
+		});
+	}
+});
 app.post("/editProfile", function(req, res) {
 	var username = req.session.username;
 	//var newusername = req.body.username;
@@ -449,6 +246,262 @@ app.post("/editProfile", function(req, res) {
 	});
 });
 
+//Add a new Car to database
+app.get("/car/new", function (req, res) {
+	if (typeof req.session.username == 'undefined') {
+		res.render("login");
+	}
+	else if (req.session.authority === 'Dealer') {
+		res.render("newCar");
+	}	
+	else {
+		res.redirect("/");
+	}
+});
+
+//Process the add Car Form
+app.post("/addCar", function (req, res) {
+    newCar = {
+        Brand: req.body.Brand,
+        Model: req.body.Model,
+        Year: req.body.Year,
+        Type: req.body.Type,
+        Price: req.body.Price,
+        Mileage: req.body.Mileage,
+        Image: req.body.Image,
+   };
+	var query = "insert into Car(car_id, model_name, type_name, brand_name, year_of_production, mileage, imageURL, price)values("+car_id+",'"+newCar.Model+"','" + newCar.Type+"','" + newCar.Brand + "'," + newCar.Year + "," + newCar.Mileage + ",'" + newCar.Image + "'"+ newCar.Price +")";
+    connection.query(query, function (err, results, fields) {  
+		if(err) console.log(this.sql);
+		else {
+			res.redirect("/");
+		} 
+    });
+});
+	
+//show the detail of a Car
+app.get("/car/:id", function (req, res) {
+	connection.query("SELECT * from Car WHERE car_id=" + req.params.id, function (err, results, fields) {
+		if(err)	console.log(this.sql);
+		else {
+			if(results.length == 0) {
+				res.render("show", {carNotFound: true});
+			}
+			else {
+				connection.query("SELECT username from Inventory WHERE car_id=" + req.params.id, function (err, results, fields) {
+					if(err)console.log(this.sql);
+					else {
+						if(results.length == 0 || typeof req.session.username == 'undefined' || results[0].username !== req.session.username) {
+							res.render("show",{Car:results[0], authority: false});
+						}
+						else {
+							res.render("show",{Car:results[0], authority: true});
+						}
+					}					
+				});
+			}
+		}
+	});
+});
+	
+app.get("/car/:id/update", function (req, res) {
+	res.send("Update");
+		// connection.query(" * from Car WHERE car_id="+ req.params.id, function (err, rows, fields){
+		// 	if(!err){
+		// 		res.render("show",{Car:rows[0]});
+		// 	} else {
+		// 		console.log('Error while performing Query');
+		// 	}
+		// });
+});
+
+app.get("/car/:id/delete", function (req, res) {
+	// res.send("delete");
+	connection.query("DELETE from Car WHERE car_id="+ req.params.id, function (err, rows, fields){
+		if(!err){
+			res.redirect("/");
+		} else {
+			console.log('Error while performing Query');
+		}
+	});
+});
+	
+// =====================================
+// Search
+// =====================================
+app.get("/search", function (req, res){
+	res.render("search");
+});
+	
+app.post("/search", function (req, res){
+	var brand = req.body.Brand;
+	var model = req.body.Model;
+	var query = "SELECT * from Car WHERE brand_name= '"+brand+"' and model_name= '"+model+"'";
+	connection.query(query, function (err, rows, fields){
+		if(!err){
+			res.render("results",{Cars:rows});
+		}
+		else {
+			console.log(this.sql);
+		}
+	});
+});
+
+// =====================================
+// Admin pages
+// =====================================
+app.get("/admin", function(req, res) {
+	if (typeof req.session.username == 'undefined') {
+		res.render("login");
+	}
+	else if (req.session.authority === 'DBManager') {
+		res.render("admin");
+	}
+	else {
+		res.redirect("/");
+	}
+});
+
+app.get("/cars", function(req, res) {
+	if (typeof req.session.username == 'undefined') {
+		res.render("login");
+	}
+	else if (req.session.authority === 'DBManager') {
+		var add = req.query.add;
+		var selectQuery = 'select * from Car natural join Customer;'
+		connection.query(selectQuery, function(err, results, fields) {
+			if(err) console.log(this.sql);
+			console.log(results[0]);
+			res.render("admin_cars", {cars: results, addMode: add});
+		});
+	}
+	else {
+		res.redirect("/");
+	}
+});
+
+
+app.get("/customers", function(req, res) {
+	if (typeof req.session.username == 'undefined') {
+		res.render("login");
+	}
+	else if (req.session.authority === 'DBManager') {
+		var add = req.query.add;
+		var selectQuery = 'select * from User natural join Customer;'
+		connection.query(selectQuery, function(err, results, fields) {
+			if(err) console.log(this.sql);
+			console.log(results[0]);
+			res.render("admin_customers", {customers: results, addMode: add});
+		});
+	}	
+	else {
+		res.redirect("/");
+	}
+});
+
+app.get("/dealers", function(req, res) {
+	if (typeof req.session.username == 'undefined') {
+		res.render("login");
+	}
+	else if (req.session.authority === 'DBManager') {
+		var add = req.query.add;
+		var selectQuery = 'select * from User natural join Dealer;'
+		connection.query(selectQuery, function(err, results, fields) {
+			if(err) console.log(this.sql);
+			res.render("admin_dealers", {dealers: results, addMode: add});
+		});
+	}	
+	else {
+		res.redirect("/Welcome");
+	}
+});
+
+app.post("/newDealer", function(req, res) {
+	var username = req.body.username;
+	var passwd = req.body.passwd;
+	var name = req.body.name;
+	var phone = req.body.phone;
+	var email = req.body.email;
+	var zipcode = req.body.zipcode;
+	
+	var selectQuery = 'select * from User where username="' + username + '";';
+	connection.query(selectQuery, function addUser(err, results, fields) {
+		if(err) console.log(this.sql);
+		else if (results[0] != null) {
+			res.render("admin_dealers", {addMode: true, errorAddDealer: "Username is taken."});
+		}	
+		else {
+			const hash = crypto.createHash('sha256');
+			hash.update(username+passwd+username.length.toString());
+			var hashed_password = hash.digest('hex');
+			var insertQuery = 'insert into User (username, password, name, phone, email, zipcode, register_date, authority) values ("' 
+				+ username + '", UNHEX("' + hashed_password + '"), "' + name + '", "' +  phone + '", "' +  email + '", ' +  zipcode + ', CURDATE(), "Dealer");'
+			connection.query(insertQuery, function(err, results, fields) {
+				if (err) console.log(this.sql);
+				else {
+					var insertQuery2 = 'insert into Dealer (username) values ("' + username + '");'
+					connection.query(insertQuery2, function (err, results, fields) {
+						if (err) throw err;
+						else {
+							res.redirect("dealers");
+						}
+					});
+				}
+			});
+		}
+	});
+});
+
+// =====================================
+// Logging out
+// =====================================
+app.get("/logout", function(req, res){
+	delete req.session.username;
+	delete req.session.authority;
+	res.redirect("/");
+});
+
+// =====================================
+// Create-admin (only for debugging purposes)
+// =====================================
+app.get("/create-admin", function(req, res) {
+	res.render("createAdmin");
+});
+
+app.post("/newAdmin", function(req, res) {
+	var username = req.body.username;
+	var passwd = req.body.passwd;
+	var passwd2 = req.body.passwd2;	
+	
+	var selectQuery = 'select * from User where username="' + username + '";';
+	connection.query(selectQuery, function addUser(err, results, fields) {
+		if(err) console.log(this.sql);
+		else if (results[0] != null) {
+			res.render("createAdmin", {error: "Username is taken."});
+		}	
+		else {
+			if (passwd != passwd2) {
+				res.render("createAdmin", {error: "Passwords do not match"});
+			}
+			else {
+				const hash = crypto.createHash('sha256');
+				hash.update(username+passwd+username.length.toString());
+				var hashed_password = hash.digest('hex');
+				var insertQuery = 'insert into User (username, password, register_date, authority) values ("' + username + '", UNHEX("' + hashed_password + '"), CURDATE(), "DBManager");';
+				connection.query(insertQuery, function(err, results, fields) {
+					if (err) {
+						console.log(this.sql);
+					}
+					else {
+						res.redirect("login");
+					}
+				});
+			}
+		}
+	});
+});
+
 //Listen on localhost:8000
-app.listen(port);
-console.log('The magic happens on port ' + port);
+app.listen(8000, 'localhost', function(){
+   console.log("The Service is running");
+});

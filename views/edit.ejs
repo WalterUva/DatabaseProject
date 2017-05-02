@@ -5,11 +5,11 @@
         <div style="width:30%; margin:25px auto">
             <form action="/Car/<%=Car.car_id%>?_method=PUT" method="POST">
                 <div class="form-group">
-                    <input class="form-control" type= "text" placeholder="Price" name="Price" >
+                    <input class="form-control" type= "text" placeholder=<%=Car.price%> name="Price" >
                 </div>
 
                 <div class="form-group">
-                    <input class="form-control" type= "text" placeholder="Mileage" name="Mileage" >
+                    <input class="form-control" type= "text" placeholder=<%=Car.mileage%> name="Mileage" >
                 </div>
 
                 <div class="form-group">

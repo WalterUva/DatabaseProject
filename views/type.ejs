@@ -1,0 +1,10 @@
+<% include partials/header %>
+<form action="/newType" method="POST" id="typeForm">
+	<div class="form-group">
+		<input class="form-control" placeholder="Type" type="text" name="name">
+	</div>
+	<div class="form-group">
+		<input type ="submit" class="btn btn-lg btn-primary btn-block" value="Add type">
+	</div>	
+<textarea name="description" form="typeForm">Enter text here...</textarea>
+

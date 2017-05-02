@@ -24,7 +24,9 @@
 							<li ><a href="/sign-up">Sign Up</a></li>
 						<% } %>
 					<% } else { %>
+						<% if (typeof profile == "undefined") { %>
 						<li><a href="/profile">Profile</a></li>
+						<% } %>
 						<li><a href="/logout">Logout</a></li>
 					<% } %>
                 </ul>

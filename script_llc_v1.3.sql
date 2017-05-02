@@ -81,7 +81,7 @@ DROP TABLE IF EXISTS `Car`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Car` (
-  `car_id` int(11) NOT NULL,
+  `car_id` int(11) NOT NULL AUTO_INCREMENT,
   `model_name` varchar(30) DEFAULT NULL,
   `type_name` varchar(30) DEFAULT NULL,
   `brand_name` varchar(30) DEFAULT NULL,

@@ -1,0 +1,92 @@
+<% include partials/header %>
+<body>
+    <div class="content-wrapper py-3">
+        <div class="container-fluid">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fa fa-table">Inventory</i>
+                </div>
+                <div class="card-block">
+                    <div class="table-responsive">
+						<% if (cars.length > 0)  { %>
+                        <table class="table table-bordered" width="100%" id="dataTable" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>CarID</th>
+                                    <th>Model</th>
+                                    <th>Type</th>
+                                    <th>Brand</th>
+                                    <th>Mileage</th>
+									<th>Year</th>
+									<th>Price</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>CarID</th>
+                                    <th>Model</th>
+                                    <th>Type</th>
+                                    <th>Brand</th>
+                                    <th>Mileage</th>
+									<th>Year</th>
+									<th>Price</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+								<% for (i = 0; i < cars.length; i++)   { %>
+                                <tr>
+                                    <td><%= cars[i].car_id%></td>
+                                    <th><%= cars[i].model_name%></th>
+                                    <th><%= cars[i].type_name%></th>
+                                    <th><%= cars[i].brand_name%></th>
+                                    <th><%= cars[i].mileage%></th>
+									<th><%= cars[i].year %></th>
+									<th><%= cars[i].price%></th>
+                                </tr>
+								<%  }  %>
+                            </tbody>
+                        </table>
+						<%  }  else { %>
+						<table class="table table-bordered" width="100%" id="dataTable" cellspacing="0">
+                            <thead>
+                                <tr>
+                                <th></th>
+                                </tr>
+                            </thead>
+ 
+                            <tbody>
+                                <tr>
+                                    <td>No cars in inventory</td>
+                                </tr>
+                            </tbody>
+                        </table>
+						<%  }  %>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+    </div>
+    <!-- /.content-wrapper -->
+
+    <a class="scroll-to-top rounded" href="#">
+        <i class="fa fa-chevron-up"></i>
+    </a>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/tether/tether.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="vendor/chart.js/Chart.min.js"></script>
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Custom scripts for this template -->
+    <script src="js/sb-admin.min.js"></script>
+
+</body>
+</html>

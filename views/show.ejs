@@ -2,43 +2,36 @@
  <div class="container">
     <div class="row">
         <div class="col-md-3">
-<<<<<<< HEAD
             <p class="lead">EasyAuto</p>
 			<% if (typeof carNotFound != "undefined" && carNotFound == true)  { %>
-=======
-            <p class="lead"><a href="/User/<%=Car.username%>"><%=Car.name%></a></p>
->>>>>>> origin/Cars_update_post_delete_search
+			<h3> Car not found </h3>
+			
+			<% } else { %>
+            <p class="lead"><a href="/user/<%=Car.username%>"><%=Car.name%></a></p>
             <div class="list-group">
                 <li class="list-group-item">Year <%=Car.year_of_production%></li>
                 <li class="list-group-item">Mileage <%=Car.mileage%></li>
                 <li class="list-group-item"><%=Car.type_name%></li>
             </div>
-			<% } else { %>
-				<h3> Car not found </h3>
+			<div class="col-md-9">
+				<div class="thumbnail">
+					<img class="img-responsive" src="<%= Car.imageURL %>">
+						<div class="caption-full">
+						<h4 class="pull-right">$<%=Car.price%></h4>
+						<h4><%=Car.brand_name%></h4>
+						<p><%=Car.model_name%></p>
+					</div>
+				</div>
+				<% if (typeof authority != "undefined" && authority === "Dealer")  { %>
+				<a href="/car/<%=Car.car_id%>/update" class="btn btn-warning">Update </a>
+				<a href="/car/<%=Car.car_id%>/delete" class="btn btn-danger">Delete </a>
+				<% } else if (authority === "Customer") { %>
+				<a href="/car/<%=Car.car_id%>/follow">Follow</a>
+				<a href="/car/<%=Car.car_id%>/buy">Buy</a>
+				<% } %>
+			</div> 
 			<% } %>
         </div>
-		<% if (typeof carNotFound != "undefined" && carNotFound == true)  { %>
-        <div class="col-md-9">
-            <div class="thumbnail">
-                <img class="img-responsive" src="<%= Car.imageURL %>">
-                <div class="caption-full">
-                    <h4 class="pull-right">$<%=Car.price%></h4>
-                    <h4><%=Car.brand_name%></h4>
-                    <p><%=Car.model_name%></p>
-                </div>
-                <a href="/Car/<%=Car.car_id%>/update" class="btn btn-warning"> Update </a>
-                <a href="/Car/<%=Car.car_id%>/delete" class="btn btn-danger"> Delete </a>
-            </div>
-<<<<<<< HEAD
-			<% if (typeof authority != "undefined" && authority == true)  { %>
-            <a href="/Car/<%=Car.car_id%>/update" class="btn btn-warning"> Update </a>
-            <a href="/Car/<%=Car.car_id%>/delete" class="btn btn-danger"> Delete </a>
-			<% } %>
-        </div> 
-		<% } %>
-=======
-        </div>
->>>>>>> origin/Cars_update_post_delete_search
     </div>
 </div>
 <% include partials/footer %>

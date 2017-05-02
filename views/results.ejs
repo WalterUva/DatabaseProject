@@ -1,7 +1,10 @@
 <% include partials/header %>
  <div class="container">
+	<% if (Cars.length > 0) { %>
     <% Cars.forEach(function(Car){ %>
     <div class="row">
+		<div class="col-md-1">
+		</div>
         <div class="col-md-3">
             <div class="list-group">
                 <li class="list-group-item">Year <%=Car.year_of_production%></li>
@@ -11,7 +14,7 @@
         </div>
         <div class="col-md-9">
             <div class="thumbnail">
-                <img class="img-responsive" src="<%= Car.imageURL %>">
+                <img class="img-responsive" src="<%=Car.imageURL %>">
                 <div class="caption-full">
                     <h4 class="pull-right">$<%=Car.price %></h4>
                     <h4><a><%=Car.brand_name%></a></h4>
@@ -21,6 +24,10 @@
         </div>
     </div>
     <% }); %>
+	
+	<% } else { %>
+		No cars found.
+	<% } %>
 </div>
     
 <% include partials/footer %>

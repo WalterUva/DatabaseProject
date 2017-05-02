@@ -45,7 +45,7 @@ CREATE TABLE `Appointment` (
 
 LOCK TABLES `Appointment` WRITE;
 /*!40000 ALTER TABLE `Appointment` DISABLE KEYS */;
-INSERT INTO `Appointment` VALUES (300001,'customer_Jason','dealer_Uva',100007,'2017-03-05'),(300002,'customer_Jason','dealer_UVa',100007,'2017-04-03');
+INSERT INTO `Appointment` VALUES (300001,'jason','dealer2',100007,'2017-03-05'),(300002,'jason','dealer2',100007,'2017-04-03');
 /*!40000 ALTER TABLE `Appointment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -84,7 +84,7 @@ DROP TABLE IF EXISTS `Car`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Car` (
-  `car_id` int(11) NOT NULL AUTO_INCREMENT,
+  `car_id` int(11) NOT NULL,
   `model_name` varchar(30) DEFAULT NULL,
   `type_name` varchar(30) DEFAULT NULL,
   `brand_name` varchar(30) DEFAULT NULL,
@@ -132,7 +132,7 @@ CREATE TABLE `Customer` (
 
 LOCK TABLES `Customer` WRITE;
 /*!40000 ALTER TABLE `Customer` DISABLE KEYS */;
-INSERT INTO `Customer` VALUES ('customer_Alice','2014-10-12',1000.00),('customer_Bob','2012-09-23',54000.00),('customer_Jason','2017-01-01',100000.00);
+INSERT INTO `Customer` VALUES ('alice','2014-10-12',1000.00),('bob','2012-09-23',54000.00),('jason','2017-01-01',100000.00);
 /*!40000 ALTER TABLE `Customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -157,7 +157,7 @@ CREATE TABLE `Dealer` (
 
 LOCK TABLES `Dealer` WRITE;
 /*!40000 ALTER TABLE `Dealer` DISABLE KEYS */;
-INSERT INTO `Dealer` VALUES ('dealer_Brown','2014-07-07',2),('dealer_CarFax','2012-01-01',3),('dealer_Uva','2016-08-15',5);
+INSERT INTO `Dealer` VALUES ('brown','2014-07-07',2),('dealer1','2012-01-01',3),('dealer2','2016-08-15',5);
 /*!40000 ALTER TABLE `Dealer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -184,7 +184,7 @@ CREATE TABLE `Following` (
 
 LOCK TABLES `Following` WRITE;
 /*!40000 ALTER TABLE `Following` DISABLE KEYS */;
-INSERT INTO `Following` VALUES ('customer_Jason',100005),('customer_Jason',100006),('customer_Jason',100007),('customer_Alice',100007),('customer_Bob',100009),('customer_Bob',100010);
+INSERT INTO `Following` VALUES ('jason',100005),('jason',100006),('jason',100007),('alice',100007),('bob',100009),('bob',100010);
 /*!40000 ALTER TABLE `Following` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -212,7 +212,7 @@ CREATE TABLE `Inventory` (
 
 LOCK TABLES `Inventory` WRITE;
 /*!40000 ALTER TABLE `Inventory` DISABLE KEYS */;
-INSERT INTO `Inventory` VALUES ('dealer_CarFAX',100000,'Charlottesville VA'),('dealer_CarFAX',100001,'Arlinton VA'),('dealer_CarFAX',100002,'Manassas VA'),('dealer_CarFAX',100003,'Front Royal VA'),('dealer_CarFAX',100004,'Woodbridge VA'),('dealer_Brown',100005,'San Francisco CA'),('dealer_Brown',100006,'St. Barbara CA'),('dealer_Brown',100007,'Los Angeles CA'),('dealer_Brown',100008,'Los Angeles CA'),('dealer_Uva',100009,'Charlottesville VA'),('dealer_Uva',100010,'Charlottesville VA'),('dealer_Uva',100011,'Charlottesville VA'),('dealer_Uva',100012,'Charlottesville VA');
+INSERT INTO `Inventory` VALUES ('dealer1',100000,'Charlottesville VA'),('dealer1',100001,'Arlinton VA'),('dealer1',100002,'Manassas VA'),('dealer1',100003,'Front Royal VA'),('dealer1',100004,'Woodbridge VA'),('brown',100005,'San Francisco CA'),('brown',100006,'St. Barbara CA'),('brown',100007,'Los Angeles CA'),('brown',100008,'Los Angeles CA'),('dealer2',100009,'Charlottesville VA'),('dealer2',100010,'Charlottesville VA'),('dealer2',100011,'Charlottesville VA'),('dealer2',100012,'Charlottesville VA');
 /*!40000 ALTER TABLE `Inventory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -303,7 +303,7 @@ CREATE TABLE `Review` (
 
 LOCK TABLES `Review` WRITE;
 /*!40000 ALTER TABLE `Review` DISABLE KEYS */;
-INSERT INTO `Review` VALUES (20001,'customer_Alice','dealer_UVa','2017-03-21 12:24:53','Very nice and helpful exp.',5),(20002,'customer_Jason','dealer_Brown','2017-03-24 09:04:19','Depressed. They are too arrogant',2);
+INSERT INTO `Review` VALUES (20001,'alice','dealer2','2017-03-21 12:24:53','Very nice and helpful exp.',5),(20002,'jason','brown','2017-03-24 09:04:19','Depressed. They are too arrogant',2);
 /*!40000 ALTER TABLE `Review` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -360,7 +360,7 @@ CREATE TABLE `Transaction` (
 
 LOCK TABLES `Transaction` WRITE;
 /*!40000 ALTER TABLE `Transaction` DISABLE KEYS */;
-INSERT INTO `Transaction` VALUES (100007,'customer_Jason','dealer_Brown',13000.00,'2017-03-21');
+INSERT INTO `Transaction` VALUES (100007,'jason','brown',13000.00,'2017-03-21');
 /*!40000 ALTER TABLE `Transaction` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -414,7 +414,13 @@ CREATE TABLE `User` (
 
 LOCK TABLES `User` WRITE;
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
-INSERT INTO `User` VALUES ('admin','admin','Dbmanager','4342020000','root@db.com',22903,'DBManager'),('customer_Alice','customer_Alice','Alice','4342025555','alice@db.com',22904,'Customer'),('customer_Bob','customer_Bob','Bob','4342026666','bob@db.com',22905,'Customer'),('customer_Jason','customer_Jason','Jason','4342024444','jason@db.com',22903,'Customer'),('dealer_Brown','dealer_Brown','Brown','4342022222','brown@db.com',22901,'Dealer'),('dealer_CarFAX','dealer_CarFAX','CarFAX','4342021111','carfax@db.com',22904,'Dealer'),('dealer_Uva','dealer_Uva','Uva','4342023333','uva@db.com',22903,'Dealer');
+INSERT INTO `User` VALUES ('admin',UNHEX("892a550c05b37989f36d9a5164987269f5dc359143c078d120ec2143055de152"),'Dbmanager','4342020000','root@db.com', 22903, CURDATE(), 'DBManager', CURDATE()),
+('alice',UNHEX("895b06c5f5e2ee839384ae47b77617d3a072c05d180cdbcbc174f8fcb825cebc"),'Alice','4342025555','alice@db.com',22904,'Customer', CURDATE()),
+('bob', UNHEX("90b7d08052db35047df8988d53f8984313237187a1fd0eb8899f3a4e1a323f57"),'Bob','4342026666','bob@db.com',22905,'Customer', CURDATE()),
+('jason',UNHEX("7b29c348623fd10b97c19e87e60b562f1ce3d896979ac455d52a384d9359c53b"),'Jason','4342024444','jason@db.com',22903,'Customer', CURDATE()),
+('brown',UNHEX("86589084b822a49d9ac514724b64371c7f859b13f6e920e850a6efe93a6c5eec"),'Brown','4342022222','brown@db.com',22901,'Dealer', CURDATE()),
+('dealer1',UNHEX("0b21c8a0250035bf0d3f16b27a6d619916b8ac278cf29c0d103f845ec2a58d5e"),'CarFAX','4342021111','carfax@db.com',22904,'Dealer', CURDATE()),
+('dealer2',UNHEX("bdccbad8ce2b31272bd7b79dbdbdcec771b0a802831fa9f9a8990fd841615375"),'Uva','4342023333','uva@db.com',22903,'Dealer', CURDATE());
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -42,6 +42,7 @@ connection.connect(function(err) {
 
 //css
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
 //Root Routes
@@ -51,7 +52,7 @@ app.set("view engine", "ejs");
 app.get('/', function(req, res) {
 	connection.query("SELECT * from Car", function (err, results, fields) {
 		if(!err){
-			res.render("index",{Cars:results});
+			res.render("index",{Cars:results, username:req.session.username, welcome:true, authority:req.session.authority});
 		} 
 		else {
 			console.log(this.sql);
@@ -85,6 +86,7 @@ app.post("/newUser", function(req, res) {
 				const hash = crypto.createHash('sha256');
 				hash.update(username+passwd+username.length.toString());
 				var hashed_password = hash.digest('hex');
+				console.log(hashed_password);
 				var insertQuery = 'insert into User (username, password, register_date) values ("' + username + '", UNHEX("' + hashed_password + '")' + ', CURDATE());';
 				connection.query(insertQuery, function(err, results, fields) {
 					if (err) {
@@ -134,7 +136,7 @@ app.get("/login", function(req, res){
 		res.render("login");
 	}
 	else {
-		res.redirect("/Welcome");
+		res.redirect("/");
 	}
 });
 
@@ -158,7 +160,7 @@ app.post("/login", function(req, res){
 					res.redirect("admin");
 				}
 				else {
-					res.redirect("/Welcome");
+					res.redirect("/");
 				}
 				
 			} else {
@@ -182,7 +184,7 @@ app.get("/profile", function(req, res) {
 		connection.query(selectQuery, function(err, results, fields) {
 			if(err) console.log(this.sql);
 			else if (results[0] != null) {
-				res.render("profile", {user: results[0], editMode: edit});
+				res.render("profile", {user: results[0], editMode: edit, profile:true, username:req.session.username});
 			}
 		});
 	}
@@ -261,6 +263,7 @@ app.get("/car/new", function (req, res) {
 
 //Process the add Car Form
 app.post("/addCar", function (req, res) {
+	var car_id = req.body.car_id;
     newCar = {
         Brand: req.body.Brand,
         Model: req.body.Model,
@@ -269,83 +272,207 @@ app.post("/addCar", function (req, res) {
         Price: req.body.Price,
         Mileage: req.body.Mileage,
         Image: req.body.Image,
-   };
-	var query = "insert into Car(car_id, model_name, type_name, brand_name, year_of_production, mileage, imageURL, price)values("+car_id+",'"+newCar.Model+"','" + newCar.Type+"','" + newCar.Brand + "'," + newCar.Year + "," + newCar.Mileage + ",'" + newCar.Image + "'"+ newCar.Price +")";
+    };
+	var query = "insert into Car(car_id, model_name, type_name, brand_name, year_of_production, mileage, imageURL, price) values("+car_id+",'"+newCar.Model+"','" + newCar.Type+"','" + newCar.Brand + "'," + newCar.Year + "," + newCar.Mileage + ",'" + newCar.Image + "',"+ newCar.Price +");";
     connection.query(query, function (err, results, fields) {  
-		if(err) console.log(this.sql);
+		if(err) console.log(err, this.sql);
 		else {
-			res.redirect("/");
+			var insertQuery2 = 'insert into Inventory(username, car_id) values("' +  req.session.username + '", ' + car_id + ');';
+			connection.query(insertQuery2, function (err, results, fields) {  
+				if(err) console.log(this.sql);
+				res.redirect("/");
+			});
 		} 
     });
 });
 	
 //show the detail of a Car
 app.get("/car/:id", function (req, res) {
-	connection.query("SELECT * from Car WHERE car_id=" + req.params.id, function (err, results, fields) {
+	//var selectQuery = "SELECT * from Car natural join Inventory natural join Dealer natural join user WHERE car_id="+ req.params.id;
+	var selectQuery = "SELECT * from Car natural join Inventory WHERE car_id="+ req.params.id
+	connection.query(selectQuery, function (err, results, fields){
 		if(err)	console.log(this.sql);
 		else {
 			if(results.length == 0) {
 				res.render("show", {carNotFound: true});
 			}
 			else {
-				connection.query("SELECT username from Inventory WHERE car_id=" + req.params.id, function (err, results, fields) {
-					if(err)console.log(this.sql);
-					else {
-						if(results.length == 0 || typeof req.session.username == 'undefined' || results[0].username !== req.session.username) {
-							res.render("show",{Car:results[0], authority: false});
-						}
-						else {
-							res.render("show",{Car:results[0], authority: true});
-						}
-					}					
-				});
+				if(typeof req.session.username != 'undefined' && results[0].username === req.session.username) {
+					res.render("show",{Car:results[0], authority: "Dealer"});
+				}
+				else if (req.session.authority === "Customer") {
+					res.render("show",{Car:results[0], authority: "Customer"});
+				}
+				else {
+					res.render("show",{Car:results[0], authority: "None"});
+				}
 			}
 		}
 	});
 });
 	
 app.get("/car/:id/update", function (req, res) {
-	res.send("Update");
-		// connection.query(" * from Car WHERE car_id="+ req.params.id, function (err, rows, fields){
-		// 	if(!err){
-		// 		res.render("show",{Car:rows[0]});
-		// 	} else {
-		// 		console.log('Error while performing Query');
-		// 	}
-		// });
-});
-
-app.get("/car/:id/delete", function (req, res) {
-	// res.send("delete");
-	connection.query("DELETE from Car WHERE car_id="+ req.params.id, function (err, rows, fields){
-		if(!err){
-			res.redirect("/");
-		} else {
-			console.log('Error while performing Query');
+	connection.query("SELECT * from Car WHERE car_id="+ req.params.id, function (err, rows, fields) {
+		if(err)console.log(this.sql);
+		else {
+			res.render("edit",{Car:rows[0]});
 		}
 	});
 });
+
+app.put("/car/:id", function(req, res){
+	var query = "update Car set price =" +req.body.Price+ ", mileage = " + req.body.Mileage + " where car_id ="+ req.params.id;
+	connection.query(query, function (err, rows, fields){
+		if(err)console.log(this.sql);
+		else {
+			res.redirect("/car/"+req.params.id);
+		}
+	});
+});
+
+app.get("/car/:id/delete", function (req, res) {
+	connection.query("DELETE from Car WHERE car_id="+ req.params.id, function (err, rows, fields) {
+		if(err)console.log(this.sql);
+		else{
+			res.redirect("/");
+		}
+	});
+});
+
+app.get("/car/:id/follow", function (req, res) {
+	var insertQuery = 'insert into Following(username, car_id) values("' +  req.session.username + '", ' + car_id + ');';
+	connection.query(insertQuery, function (err, rows, fields){
+		if(err)console.log(this.sql);
+		else {
+			res.redirect("/");
+		}
+	});
+});
+
+app.get("/inventory", function (req, res) {
+	if (typeof req.session.username == 'undefined') {
+		res.render("login");
+	}
+	else if (req.session.authority === 'Dealer') {
+		var selectQuery = 'select * from Inventory where username="' + req.session.username  + '";';
+		connection.query(selectQuery, function (err, results, fields){
+			if(err)console.log(this.sql);
+			else {
+				res.render("inventory", {cars: results});
+			}
+		});
+	}
+	else {
+		res.redirect("/");
+	}
+});
+
+app.get("/following", function (req, res) {
+	if (typeof req.session.username == 'undefined') {
+		res.render("login");
+	}
+	else if (req.session.authority === 'Customer') {
+		var selectQuery = 'select * from Following where username="' + req.session.username + '";';
+		connection.query(selectQuery, function (err, results, fields){
+			if(err)console.log(this.sql);
+			else {
+				res.render("following", {cars: results});
+			}
+		});
+	}
+	else {
+		res.redirect("/");
+	}
+});
+
+// =====================================
+// Model
+// =====================================
+app.get("/model", function (req, res) {
+	if (req.session.authority === 'Dealer' || req.session.authority === 'DBManager') {
+		res.render("model");
+	}
+	else {
+		res.redirect("/");
+	}
+});
+
+app.get("/newModel", function (req, res) {
+	var name = req.body.name;
+	var brandName = req.body.brandName;
+	var description = req.body.description;
+	var insertQuery = 'insert into Model(name, brand_name, description) values("' +  name + '", "' + brandName + '", "' + description + '");';
+	connection.query(insertQuery, function (err, rows, fields){
+		if(err)console.log(this.sql);
+		else {
+			res.redirect("/");
+		}
+	});
+});
+
+
+
+// =====================================
+// Type
+// =====================================
+app.get("/type", function (req, res) {
+	if (req.session.authority === 'Dealer' || req.session.authority === 'DBManager') {
+		res.render("type");
+	}
+	else {
+		res.redirect("/");
+	}
 	
+});
+
+app.get("/newType", function (req, res) {
+	var name = req.body.name;
+	var description = req.body.description;	
+	
+	var insertQuery = 'insert into Model(name, description) values("' +  name + '", "' + description + '");';
+	connection.query(insertQuery, function (err, rows, fields){
+		if(err)console.log(this.sql);
+		else {
+			res.redirect("/");
+		}
+	});
+});
+
 // =====================================
 // Search
 // =====================================
 app.get("/search", function (req, res){
-	res.render("search");
+	var query = "SELECT name, brand_name from Model";
+	connection.query(query, function (err, results, fields) {
+		if(err)console.log(this.sql);
+		var dictionary = {};
+		for (i = 0; i < results.length; i++) {
+			if (typeof dictionary[results[i].brand_name] == 'undefined') {
+				dictionary[results[i].brand_name] = [results[i].name];
+			}
+			else {
+				dictionary[results[i].brand_name].push(results[i].name);
+			}			
+		}
+		res.render("search", {models:dictionary});
+	});
+	
+	
 });
 	
-app.post("/search", function (req, res){
-	var brand = req.body.Brand;
-	var model = req.body.Model;
-	var query = "SELECT * from Car WHERE brand_name= '"+brand+"' and model_name= '"+model+"'";
+app.post("/searchCars", function (req, res){
+	var model = req.body.model;
+	var query = "SELECT * from Car WHERE model_name= '"+ model+"';";
 	connection.query(query, function (err, rows, fields){
 		if(!err){
-			res.render("results",{Cars:rows});
+			res.render("results", {Cars:rows});
 		}
 		else {
 			console.log(this.sql);
 		}
 	});
 });
+
 
 // =====================================
 // Admin pages
@@ -355,7 +482,7 @@ app.get("/admin", function(req, res) {
 		res.render("login");
 	}
 	else if (req.session.authority === 'DBManager') {
-		res.render("admin");
+		res.render("admin", {username: req.session.username});
 	}
 	else {
 		res.redirect("/");
@@ -371,7 +498,6 @@ app.get("/cars", function(req, res) {
 		var selectQuery = 'select * from Car natural join Customer;'
 		connection.query(selectQuery, function(err, results, fields) {
 			if(err) console.log(this.sql);
-			console.log(results[0]);
 			res.render("admin_cars", {cars: results, addMode: add});
 		});
 	}
@@ -500,6 +626,7 @@ app.post("/newAdmin", function(req, res) {
 		}
 	});
 });
+
 
 //Listen on localhost:8000
 app.listen(8000, 'localhost', function(){
